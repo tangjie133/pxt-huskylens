@@ -1,5 +1,5 @@
 {
-    "name": "无标题",
+    "name": "Huskylens",
     "dependencies": {
         "core": "*",
         "radio": "*"
@@ -8,9 +8,10 @@
     "files": [
         "main.blocks",
         "main.ts",
-        "README.md"
+        "README.md",
+        "huskylens.ts"
     ],
-    "preferredEditor": "blocksprj",
+    "preferredEditor": "tsprj",
     "testFiles": [
         "test.ts"
     ]
