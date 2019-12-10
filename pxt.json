@@ -9,7 +9,14 @@
         "main.blocks",
         "main.ts",
         "README.md",
-        "huskylens.ts"
+        "huskylens.ts",
+		"HUKSYLENS.cpp",
+		"HUKSYLENS.h",
+		"HUKSYLENSMindPlus.h",
+		"HuskyLensProtocolCore.c",
+		"HuskyLensProtocolCore.h"
+		
+		
     ],
     "preferredEditor": "tsprj",
     "testFiles": [
