@@ -10,13 +10,12 @@
         "main.ts",
         "README.md",
         "huskylens.ts",
-		"HUKSYLENS.cpp",
-		"HUKSYLENS.h",
-		"HUKSYLENSMindPlus.h",
-		"HuskyLensProtocolCore.c",
-		"HuskyLensProtocolCore.h"
-		
-		
+        "HUKSYLENS.cpp",
+        "HUKSYLENS.h",
+        "HUKSYLENSMindPlus.h",
+        "HuskyLensProtocolCore.c",
+        "HuskyLensProtocolCore.h",
+        "enums.d.ts"
     ],
     "preferredEditor": "tsprj",
     "testFiles": [
