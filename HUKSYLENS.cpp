@@ -7,7 +7,14 @@ namespace HUKSYLENS {
 
 class HUKSYLENS1 : public HUKSYLENSMindPlus{
     
-    
+    void request(){
+        HUKSYLENSMindPlus.request();
+    }
+
+    void isLearned(int ID){
+        return HUKSYLENSMindPlus.isLearned(ID);
+    }
+
 }
 
 }
