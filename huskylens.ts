@@ -10,6 +10,12 @@ enum Content1 {
     WIDTH = 4
 }
 
+enum HUSKYLENSResultType_t {
+    //%block="HUSKYLENSResultBlock"
+    HUSKYLENSResultBlock=1,
+     //%block="HUSKYLENSResultArrow"
+    HUSKYLENSResultArrow=2,
+} 
 enum protocolCommand {
     COMMAND_REQUEST = 0x20,
     COMMAND_REQUEST_BLOCKS = 0x21,
@@ -39,7 +45,7 @@ enum protocolAlgorithm {
 } 
 //% weight=100  color=#00A654 block="Huskylens"
 namespace huskylens{
-
+    let Protocol_t: number[] =[0]
     let i = 1;
     let FRAME_BUFFER_SIZE = 128
     let HEADER_0_INDEX = 0
@@ -65,23 +71,50 @@ namespace huskylens{
     let content_read_end = false;
 
     let command: number
-
+    let content: number
     //% block="request"
-   export function request():boolean {
+   export function request():void {
        
        //let length = husky_lens_protocol_write_end();
        buffer = husky_lens_protocol_write_begin(COMMAND_REQUEST);
        let Buffer = pins.createBufferFromArray(buffer);
        protocolWrite(Buffer);
-       return true;
+       processReturn();
    }
 
    //% block="request|%ID"
    
    export function isLearned(ID:number) :boolean{
-        return false;
+       let x = countLearnedIDs();
+       if (ID == x)return true;
+       return false;
     }
 
+   //% block="ID|%ID HUSKYLENSResultType|%Ht"
+   export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): boolean {
+       switch (Ht) {
+           case 1:
+               if (countBlocks()!=0)return true;
+           case 2:
+               if (countArrows() != 0) return true;
+           default:
+               return false;
+       }
+       //return false;
+   }
+
+   //%block="reade|%number1"
+   export function nm(number1: Content1): number {
+       switch (number1) {
+           case 1:
+               return Protocol_t[1] ;
+           case 2:
+               return Protocol_t[2];
+           default:
+               return 0;
+       }
+       //return false;
+   }
 //
    function validateCheckSum() {
        
@@ -128,14 +161,15 @@ namespace huskylens{
 //
    function processReturn(){
        if (!wait(protocolCommand.COMMAND_RETURN_INFO)) return false;
-       protocolReadReturnInfo(protocolInfo);
+       //protocolReadReturnInfo(protocolInfo);
+       protocolWriteFiveInt16(protocolCommand.COMMAND_RETURN_INFO);
       // protocolPtr = (Protocol_t *) realloc(protocolPtr, protocolInfo.protocolSize * sizeof(Protocol_t));
 
-       for (let i = 0; i < protocolInfo.protocolSize; i++)
+       for (let i = 0; i < Protocol_t[1]; i++)
        {
            if (!wait()) return false;
-           if (protocolReadReturnBlock(protocolPtr[i])) continue;
-           else if (protocolReadReturnArrow(protocolPtr[i])) continue;
+           if (protocolReadFiveInt16(protocolCommand.COMMAND_RETURN_BLOCK)) continue;
+           else if (protocolReadFiveInt16(protocolCommand.COMMAND_RETURN_ARROW)) continue;
            else return false;
        }
        return true;
@@ -226,8 +260,87 @@ namespace huskylens{
        receive_index++;
        return false;
    }
+
 //
+   //function  protocolReadReturnInfo(Protocol_t & protocol){ return protocolReadFiveInt16(protocol, COMMAND_RETURN_INFO); }
    
+//
+   function protocolWriteFiveInt16(command=0){
+       Protocol_t[0] = command;
+    let buffer = husky_lens_protocol_write_begin(command);
+    husky_lens_protocol_write_int16(Protocol_t[1]);
+    husky_lens_protocol_write_int16(Protocol_t[2]);
+    husky_lens_protocol_write_int16(Protocol_t[3]);
+    husky_lens_protocol_write_int16(Protocol_t[4]);
+    husky_lens_protocol_write_int16(Protocol_t[5]);
+       //let  length = husky_lens_protocol_write_end();
+       let Buffer = pins.createBufferFromArray(buffer);
+       protocolWrite(Buffer);
+   }
+
+//
+   function husky_lens_protocol_write_int16(content=0){
+       if (send_index + content >= FRAME_BUFFER_SIZE) { send_fail = true; return; }
+       //if (IS_BIG_ENDIAN()) { __builtin_bswap16(content); }
+       //memcpy(send_buffer + send_index, &content, sizeof(content));
+       send_buffer[send_index]=command;
+       send_index +=2;
+   }
+// 
+   function protocolReadFiveInt16(command=0){
+       if (husky_lens_protocol_read_begin(command)) {
+           Protocol_t[0] = command;
+           Protocol_t[1] = husky_lens_protocol_read_int16();
+           Protocol_t[2] = husky_lens_protocol_read_int16();
+           Protocol_t[3]= husky_lens_protocol_read_int16();
+           Protocol_t[4] = husky_lens_protocol_read_int16();
+           Protocol_t[5] = husky_lens_protocol_read_int16();
+           husky_lens_protocol_read_end();
+           return true;
+       }
+       else {
+           return false;
+       }
+   }
+//
+   function husky_lens_protocol_read_int16(){
+       if (content_current >= content_end || content_read_end) { receive_fail = true; return 0; }
+       let result = receive_buffer[content_current];
+       //memcpy(&result, receive_buffer + content_current, sizeof(result));
+       //if (IS_BIG_ENDIAN()) { __builtin_bswap16(result); }
+       content_current += 2//sizeof(result);
+       return result;
+   }
+//
+   function husky_lens_protocol_read_end(){
+       if (receive_fail) {
+           receive_fail = false;
+           return false;
+       }
+       return content_current == content_end;
+   }
+// 
+   function countLearnedIDs(){
+       return Protocol_t[2]
+   }
+//
+   function countBlocks() {
+       let counter = 0;
+       for (let i = 0; i < Protocol_t[2]; i++)
+       {
+           if (Protocol_t[0] == protocolCommand.COMMAND_RETURN_BLOCK) counter++;
+       }
+       return counter;
+   }
+//
+   function countArrows() {
+       let counter = 0;
+       for (let i = 0; i < Protocol_t[2]; i++)
+       {
+           if (Protocol_t[0] == protocolCommand.COMMAND_RETURN_ARROW) counter++;
+       }
+       return counter;
+   }
 
 
 }
