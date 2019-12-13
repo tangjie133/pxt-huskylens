@@ -45,7 +45,7 @@ enum protocolAlgorithm {
 } 
 //% weight=100  color=#00A654 block="Huskylens"
 namespace huskylens{
-    let Protocol_t: number[] =[0]
+    let Protocol_t: number[] =[0,0,0,0,0,0]
     let i = 1;
     let FRAME_BUFFER_SIZE = 128
     let HEADER_0_INDEX = 0
@@ -61,7 +61,7 @@ namespace huskylens{
     let COMMAND_REQUEST = 0x20;
 
     let receive_buffer: number[] = [];
-    let send_buffer: any[] = [];
+    let send_buffer: number[] = [];
     let buffer: number[] = [];
 
     let send_fail = false;
@@ -115,6 +115,17 @@ namespace huskylens{
        }
        //return false;
    }
+
+
+    //%block="init I2C"
+    export function initI2c():void {
+        while (!readKnock()){
+            //serial.writeNumber(1);
+        }
+        //serial.writeNumber(2);
+    }
+
+    //%block="init"
 //
    function validateCheckSum() {
        
@@ -150,17 +161,19 @@ namespace huskylens{
        send_buffer[HEADER_1_INDEX] = 0xAA;
        send_buffer[ADDRESS_INDEX] = 0x11;
        send_buffer[COMMAND_INDEX] = command;
+       
        send_index = CONTENT_INDEX;
+  
        return send_buffer;
    }
 //
    function protocolWrite(buffer:Buffer){
        
-       pins.i2cWriteBuffer(0x32, buffer);
+       pins.i2cWriteBuffer(0x32, buffer, false);
    }
 //
    function processReturn(){
-       if (!wait(protocolCommand.COMMAND_RETURN_INFO)) return false;
+       if (!(protocolCommand.COMMAND_RETURN_INFO)) return false;
        //protocolReadReturnInfo(protocolInfo);
        protocolWriteFiveInt16(protocolCommand.COMMAND_RETURN_INFO);
       // protocolPtr = (Protocol_t *) realloc(protocolPtr, protocolInfo.protocolSize * sizeof(Protocol_t));
@@ -177,14 +190,22 @@ namespace huskylens{
 //   
    
    function wait(command = 0){
+      
        timerBegin();
        while (!timerAvailable()) {
+           
            if (protocolAvailable()) {
+               
                if (command) {
-                   if (husky_lens_protocol_read_begin(command)) return true;
+                   if (husky_lens_protocol_read_begin(command)) { 
+                     
+                       return true;
+                   }
+                   
                }
                else {
                    return true;
+                   
                }
            }
        }
@@ -192,7 +213,11 @@ namespace huskylens{
    }
 //
     function husky_lens_protocol_read_begin(command=0){
+        
+        // serial.writeNumber(receive_buffer[COMMAND_INDEX])
+        // serial.writeLine("")
        if (command == receive_buffer[COMMAND_INDEX]) {
+          
            content_current = CONTENT_INDEX;
            content_read_end = false;
            receive_fail = false;
@@ -205,6 +230,7 @@ namespace huskylens{
     let timeOutTimer:number
    function  timerBegin(){
         timeOutTimer = input.runningTimeMicros();
+        
    }
 //
    function timerAvailable(){
@@ -212,46 +238,87 @@ namespace huskylens{
    }
 //
    function protocolAvailable(){
-       let buf = pins.i2cReadBuffer(0x32, 16, true)
-       for(let i=1;i<16;i++){
-       if (husky_lens_protocol_receive(buf[i])){
-           
-           return true;
-                }
+       let buf = pins.i2cReadBuffer(0x32, 16, false)
+       serial.writeNumber(buf[0]);
+       serial.writeLine("")
+       serial.writeNumber(buf[1]);
+       serial.writeLine("")
+       serial.writeNumber(buf[2]);
+       serial.writeLine("")
+       serial.writeNumber(buf[3]);
+       serial.writeLine("")
+       serial.writeNumber(buf[4]);
+       serial.writeLine("")
+       serial.writeNumber(buf[5]);
+       serial.writeLine("")
+       serial.writeNumber(buf[6]);
+       serial.writeLine("")
+       serial.writeNumber(buf[7]);
+       serial.writeLine("")
+       serial.writeNumber(buf[8]);
+       serial.writeLine("")
+       serial.writeNumber(buf[9]);
+       serial.writeLine("")
+       serial.writeNumber(buf[10]);
+       serial.writeLine("")
+       serial.writeNumber(buf[11]);
+       serial.writeLine("")
+       serial.writeNumber(buf[12]);
+       serial.writeLine("")
+       serial.writeNumber(buf[13]);
+       serial.writeLine("")
+       serial.writeNumber(buf[14]);
+       serial.writeLine("")
+       serial.writeNumber(buf[15]);
+       serial.writeLine("")
+       
+
+       for(let i=0;i<16;i++){
+        //    if (){
+        //    return true;
+        //         }
+        // else{
+        //             return false;
+                   
+        //         }
+           husky_lens_protocol_receive(buf[i])
         }
-       return false;
+       return false
        }
 //
    function husky_lens_protocol_receive(data: number): boolean {
+         //serial.writeNumber(data)
+        //serial.writeLine("")
        switch (receive_index) {
-           case 0:
-
+           case HEADER_0_INDEX:
                if (data != 0x55) { receive_index = 0; return false; }
+               receive_buffer[HEADER_0_INDEX] = 0x55;
                //serial.writeNumber(receive_buffer[0])
-               receive_buffer[0] = 0x55;
                break;
-           case 1:
-               //serial.writeNumber(receive_buffer[1])
-               if (data != 0xaa) { receive_index = 0; return false; }
-               receive_buffer[1] = 0xaa;
+           case HEADER_1_INDEX:
+               if (data != 0xAA) { receive_index = 0; return false; }
+               receive_buffer[HEADER_1_INDEX] = 0xAA;
+             
                break;
-           case 2:
+           case ADDRESS_INDEX:
+               
+               receive_buffer[ADDRESS_INDEX] = data;
                //serial.writeNumber(receive_buffer[2])
-               receive_buffer[2] = data;
                break;
-           case 3:
+           case CONTENT_SIZE_INDEX:
 
                if (data >= FRAME_BUFFER_SIZE - PROTOCOL_SIZE) { receive_index = 0; return false; }
-               receive_buffer[3] = data;
+               receive_buffer[CONTENT_SIZE_INDEX] = data;
                //serial.writeNumber(receive_buffer[3])
+               //serial.writeLine("")
                break;
            default:
                receive_buffer[receive_index] = data;
 
-               if (receive_index == receive_buffer[3] + CONTENT_INDEX) {
+               if (receive_index == receive_buffer[CONTENT_SIZE_INDEX] + CONTENT_INDEX) {
                    content_end = receive_index;
                    receive_index = 0;
-                   //serial.writeNumber(receive_buffer[7])
+                   //serial.writeNumber(receive_buffer[4])
                    return validateCheckSum();
 
                }
@@ -341,6 +408,40 @@ namespace huskylens{
        }
        return counter;
    }
-
+//
+   function readKnock(){
+       //for (let i = 0; i < 5; i++)
+       //{
+           //protocolWriteCommand(protocolCommand.COMMAND_REQUEST_KNOCK);
+           protocolWriteCommand(protocolCommand.COMMAND_REQUEST_KNOCK);
+           //protocolReadCommand(protocolCommand.COMMAND_REQUEST_KNOCK);
+           //protocolReadCommand(protocolCommand.COMMAND_REQUEST_KNOCK);
+           if (wait(protocolCommand.COMMAND_RETURN_OK)) {
+               return true;
+              
+           }
+       //}
+       
+       return false;
+   }
+//
+   function protocolWriteCommand(command=0){
+       Protocol_t[0] = command;
+       let buffer = husky_lens_protocol_write_begin(Protocol_t[0]);
+       //let length = husky_lens_protocol_write_end();
+       let Buffer = pins.createBufferFromArray(buffer);
+       protocolWrite(Buffer);
+   }
+//
+   function protocolReadCommand(command=0){
+       if (husky_lens_protocol_read_begin(command)) {
+           Protocol_t[0] = command;
+           husky_lens_protocol_read_end();
+           return true;
+       }
+       else {
+           return false;
+       }
+   }
 
 }
