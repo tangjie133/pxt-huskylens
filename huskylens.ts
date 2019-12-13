@@ -120,9 +120,9 @@ namespace huskylens{
     //%block="init I2C"
     export function initI2c():void {
         while (!readKnock()){
-            //serial.writeNumber(1);
+            serial.writeNumber(1);
         }
-        //serial.writeNumber(2);
+        serial.writeNumber(2);
     }
 
     //%block="init"
@@ -170,7 +170,7 @@ namespace huskylens{
    function protocolWrite(buffer:Buffer){
        //serial.writeNumber(buffer[4])
          //serial.writeLine("")
-       pins.i2cWriteBuffer(0x32, buffer, false);
+       pins.i2cWriteBuffer(0x32, buffer, true);
    }
 //
    function processReturn(){
@@ -386,7 +386,7 @@ namespace huskylens{
    function protocolWriteCommand(command=0){
        Protocol_t[0] = command;
        let buffer = husky_lens_protocol_write_begin(Protocol_t[0]);
-       //let length = husky_lens_protocol_write_end();
+       let length = husky_lens_protocol_write_end();
        let Buffer = pins.createBufferFromArray(buffer);
        protocolWrite(Buffer);
    }
