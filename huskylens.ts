@@ -27,11 +27,11 @@ enum protocolCommand {
     COMMAND_REQUEST_BLOCKS_BY_ID = 0x27,
     COMMAND_REQUEST_ARROWS_BY_ID = 0x28,
     COMMAND_RETURN_INFO = 0x29,
-    COMMAND_RETURN_BLOCK = 0x30,
-    COMMAND_RETURN_ARROW = 0x31,
-    COMMAND_REQUEST_KNOCK = 0x32,
-    COMMAND_REQUEST_ALGORITHM = 0x33,
-    COMMAND_RETURN_OK = 0x34
+    COMMAND_RETURN_BLOCK = 0x2A,
+    COMMAND_RETURN_ARROW = 0x2B,
+    COMMAND_REQUEST_KNOCK = 0x2C,
+    COMMAND_REQUEST_ALGORITHM = 0x2D,
+    COMMAND_RETURN_OK = 0x2E
 }
 
 enum protocolAlgorithm {
@@ -168,7 +168,8 @@ namespace huskylens{
    }
 //
    function protocolWrite(buffer:Buffer){
-       
+       //serial.writeNumber(buffer[4])
+         //serial.writeLine("")
        pins.i2cWriteBuffer(0x32, buffer, false);
    }
 //
@@ -190,22 +191,21 @@ namespace huskylens{
 //   
    
    function wait(command = 0){
-      
        timerBegin();
        while (!timerAvailable()) {
-           
            if (protocolAvailable()) {
-               
                if (command) {
+                
                    if (husky_lens_protocol_read_begin(command)) { 
-                     
+                    //    serial.writeNumber(3)
+                    //    serial.writeLine("")
                        return true;
                    }
-                   
                }
                else {
+                //     serial.writeNumber(4)
+                // serial.writeLine("")
                    return true;
-                   
                }
            }
        }
@@ -214,8 +214,8 @@ namespace huskylens{
 //
     function husky_lens_protocol_read_begin(command=0){
         
-        // serial.writeNumber(receive_buffer[COMMAND_INDEX])
-        // serial.writeLine("")
+        //serial.writeNumber(receive_buffer[COMMAND_INDEX])
+         //serial.writeLine("")
        if (command == receive_buffer[COMMAND_INDEX]) {
           
            content_current = CONTENT_INDEX;
@@ -239,49 +239,12 @@ namespace huskylens{
 //
    function protocolAvailable(){
        let buf = pins.i2cReadBuffer(0x32, 16, false)
-       serial.writeNumber(buf[0]);
-       serial.writeLine("")
-       serial.writeNumber(buf[1]);
-       serial.writeLine("")
-       serial.writeNumber(buf[2]);
-       serial.writeLine("")
-       serial.writeNumber(buf[3]);
-       serial.writeLine("")
-       serial.writeNumber(buf[4]);
-       serial.writeLine("")
-       serial.writeNumber(buf[5]);
-       serial.writeLine("")
-       serial.writeNumber(buf[6]);
-       serial.writeLine("")
-       serial.writeNumber(buf[7]);
-       serial.writeLine("")
-       serial.writeNumber(buf[8]);
-       serial.writeLine("")
-       serial.writeNumber(buf[9]);
-       serial.writeLine("")
-       serial.writeNumber(buf[10]);
-       serial.writeLine("")
-       serial.writeNumber(buf[11]);
-       serial.writeLine("")
-       serial.writeNumber(buf[12]);
-       serial.writeLine("")
-       serial.writeNumber(buf[13]);
-       serial.writeLine("")
-       serial.writeNumber(buf[14]);
-       serial.writeLine("")
-       serial.writeNumber(buf[15]);
-       serial.writeLine("")
-       
-
+       //serial.writeNumber(buf[4])
+       //serial.writeLine("")
        for(let i=0;i<16;i++){
-        //    if (){
-        //    return true;
-        //         }
-        // else{
-        //             return false;
-                   
-        //         }
-           husky_lens_protocol_receive(buf[i])
+           if (husky_lens_protocol_receive(buf[i])){
+           return true;
+                }
         }
        return false
        }
@@ -298,7 +261,6 @@ namespace huskylens{
            case HEADER_1_INDEX:
                if (data != 0xAA) { receive_index = 0; return false; }
                receive_buffer[HEADER_1_INDEX] = 0xAA;
-             
                break;
            case ADDRESS_INDEX:
                
@@ -350,7 +312,7 @@ namespace huskylens{
        if (send_index + content >= FRAME_BUFFER_SIZE) { send_fail = true; return; }
        //if (IS_BIG_ENDIAN()) { __builtin_bswap16(content); }
        //memcpy(send_buffer + send_index, &content, sizeof(content));
-       send_buffer[send_index]=command;
+       //send_buffer[send_index]=content;
        send_index +=2;
    }
 // 
@@ -410,17 +372,13 @@ namespace huskylens{
    }
 //
    function readKnock(){
-       //for (let i = 0; i < 5; i++)
-       //{
-           //protocolWriteCommand(protocolCommand.COMMAND_REQUEST_KNOCK);
-           protocolWriteCommand(protocolCommand.COMMAND_REQUEST_KNOCK);
-           //protocolReadCommand(protocolCommand.COMMAND_REQUEST_KNOCK);
-           //protocolReadCommand(protocolCommand.COMMAND_REQUEST_KNOCK);
+       for (let i = 0; i < 5; i++)
+       {
+           protocolWriteCommand(protocolCommand.COMMAND_REQUEST_KNOCK);//2C
            if (wait(protocolCommand.COMMAND_RETURN_OK)) {
-               return true;
-              
+               return true;  
            }
-       //}
+       }
        
        return false;
    }
