@@ -22,9 +22,9 @@ enum Content2 {
 }
 //
 enum HUSKYLENSResultType_t {
-    //%block="HUSKYLENSResultBlock"
+    //%block="Block"
     HUSKYLENSResultBlock=1,
-    //%block="HUSKYLENSResultArrow"
+    //%block="Arrow"
     HUSKYLENSResultArrow=2,
 }
 enum protocolCommand {
@@ -84,20 +84,20 @@ namespace huskylens {
 
     let command: number
     let content: number
-    //% block="request data"
+    //% block="request data once and store the data in the result"
     export function request(): void {
         protocolWriteCommand(protocolCommand.COMMAND_REQUEST)
         processReturn();
     }
 
-    //% block="ID|%ID is learning"
+    //% block="determine whether ID|%ID is learned in the result"
     export function isLearned(ID: number): boolean {
         let x = countLearnedIDs();
         if (ID <= x) return true;
         return false;
     }
 
-    //% block="ID|%ID result type|%Ht appears on the screen"
+    //% block="determine if the ID |%ID |%Ht is in the screen"
     export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): number {
         switch (Ht) {
             case 1:
@@ -110,7 +110,7 @@ namespace huskylens {
         //return false;
     }
 
-    //%block="reade ID|%ID block parameters|%number1"
+    //%block="get ID|%ID block parameters|%number1"
     export function readeBlock(ID:number,number1: Content1): number {
         let x:number
         
@@ -133,7 +133,7 @@ namespace huskylens {
         return x;
     }
 //
-    //%block="reade ID|%ID arrow parameters|%number1"
+    //%block="get ID|%ID arrow parameters|%number1"
     export function readeAppear(ID: number, number1: Content2): number {
         let x: number
        
@@ -157,7 +157,7 @@ namespace huskylens {
     }
 
 
-    //%block="init I2C"
+    //%block="Initialize I2C until successful"
     export function initI2c(): void {
         while (!readKnock()) {
             basic.showLeds(`
@@ -181,7 +181,7 @@ namespace huskylens {
         basic.clearScreen()
     }
 
-    //%block="init mode |%mode"
+    //%block="Switch to|%mode Algorithm until success"
     export function initMode(mode:protocolAlgorithm) {
         while (!writeAlgorithm(mode)) {
             basic.showLeds(`
