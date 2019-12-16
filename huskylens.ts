@@ -1,15 +1,26 @@
 // 在此处添加您的代码
 enum Content1 {
-    //% block="X coordinates"
-    X = 1,
-    //% block="Y coordonates"
-    Y = 2,
-    //% block="object lenght"
-    h = 3,
-    //% block="object width"
-    WIDTH = 4
+    //% block="xCenter"
+    xCenter= 1,
+    //% block="yCenter"
+    yCenter = 2,
+    //% block="width"
+    width = 3,
+    //% block="height"
+    height = 4
 }
-
+//
+enum Content2 {
+    //% block=" xOrigin"
+    xOrigin = 1,
+    //% block="yOrigin"
+    yOrigin = 2,
+    //% block="xTarget"
+    xTarget = 3,
+    //% block="yTarget"
+    yTarget = 4
+}
+//
 enum HUSKYLENSResultType_t {
     //%block="HUSKYLENSResultBlock"
     HUSKYLENSResultBlock=1,
@@ -100,7 +111,7 @@ namespace huskylens {
     }
 
     //%block="readeBlock|%ID|%number1"
-    export function nm(ID:number,number1: Content1): number {
+    export function readeBlock(ID:number,number1: Content1): number {
         let x:number
         if (protocolPtr[0] == protocolCommand.COMMAND_RETURN_BLOCK && protocolPtr[5]==ID){
         switch (number1) {
@@ -115,6 +126,26 @@ namespace huskylens {
             default:
                 x= -1;
          }
+        }
+        return x;
+    }
+//
+    //%block="readeAppear|%ID|%number1"
+    export function readeAppear(ID: number, number1: Content2): number {
+        let x: number
+        if (protocolPtr[0] == protocolCommand.COMMAND_RETURN_ARROW && protocolPtr[5] == ID) {
+            switch (number1) {
+                case 1:
+                    x = protocolPtr[1]; break;
+                case 2:
+                    x = protocolPtr[2]; break;
+                case 3:
+                    x = protocolPtr[3]; break;
+                case 4:
+                    x = protocolPtr[4]; break;
+                default:
+                    x = -1;
+            }
         }
         return x;
     }
@@ -398,8 +429,8 @@ namespace huskylens {
     //
     function countArrows(ID:number) {
         let counter = 0;
-        for (let i = 0; i < Protocol_t[2]; i++) {
-            if (Protocol_t[0] == protocolCommand.COMMAND_RETURN_ARROW) counter++;
+        for (let i = 0; i < Protocol_t[1]; i++) {
+            if (protocolPtr[0] == protocolCommand.COMMAND_RETURN_ARROW) counter++;
         }
         return counter;
     }
