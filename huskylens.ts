@@ -99,17 +99,24 @@ namespace huskylens {
         //return false;
     }
 
-    //%block="reade|%number1"
-    export function nm(number1: Content1): number {
+    //%block="readeBlock|%ID|%number1"
+    export function nm(ID:number,number1: Content1): number {
+        let x:number
+        if (protocolPtr[0] == protocolCommand.COMMAND_RETURN_BLOCK && protocolPtr[5]==ID){
         switch (number1) {
             case 1:
-                return Protocol_t[1];
+                x = protocolPtr[1];break;
             case 2:
-                return Protocol_t[2];
+                x= protocolPtr[2];break;
+            case 3:
+                x= protocolPtr[3]; break;
+            case 4:
+                x= protocolPtr[4];break; 
             default:
-                return 0;
+                x= -1;
+         }
         }
-        //return false;
+        return x;
     }
 
 
