@@ -265,12 +265,14 @@ namespace huskylens {
     }
     //
     function husky_lens_protocol_write_begin(command = 0) {
+    
+        //send_buffer= [0]
         send_fail = false;
         send_buffer[HEADER_0_INDEX] = 0x55;
         send_buffer[HEADER_1_INDEX] = 0xAA;
         send_buffer[ADDRESS_INDEX] = 0x11;
         send_buffer[COMMAND_INDEX] = command;
-
+        
         send_index = CONTENT_INDEX;
 
         return send_buffer;
@@ -426,9 +428,9 @@ namespace huskylens {
         //serial.writeNumber(content)
         //serial.writeLine("")
         if (send_index + x >= FRAME_BUFFER_SIZE) { send_fail = true; return; }
-        
-        send_buffer[send_index+1]=content;
-        //serial.writeNumber(send_buffer[send_index + 1])
+        send_buffer[send_index]=content&0xff;
+        send_buffer[send_index+1] = (content >> 8) &0xff;
+        //serial.writeNumber(send_buffer[send_index])
         //serial.writeLine("")
         send_index += 2;
     }
@@ -454,7 +456,6 @@ namespace huskylens {
     //
     function protocolReadFiveInt161(i:number,command = 0) {
         if (husky_lens_protocol_read_begin(command)) {
-           
             protocolPtr[i][0] = command;
             protocolPtr[i][1] = husky_lens_protocol_read_int16();
             protocolPtr[i][2] = husky_lens_protocol_read_int16();
@@ -538,8 +539,9 @@ namespace huskylens {
         }
     }
     //
-    let algorithmType: number
-    function writeAlgorithm(algorithmType = 0) {
+    function writeAlgorithm(algorithmType: number) {
+         //serial.writeNumber(algorithmType)
+        //serial.writeLine("")
         Protocol_t[1] = algorithmType;
         protocolWriteOneInt16( protocolCommand.COMMAND_REQUEST_ALGORITHM);
         return wait(protocolCommand.COMMAND_RETURN_OK);
