@@ -46,13 +46,13 @@ enum protocolCommand {
 }
 
 enum protocolAlgorithm {
-    ALGORITHM_FACE_RECOGNITION,
-    ALGORITHM_OBJECT_TRACKING,
-    ALGORITHM_OBJECT_RECOGNITION,
-    ALGORITHM_LINE_TRACKING,
-    ALGORITHM_COLOR_RECOGNITION,
-    ALGORITHM_TAG_RECOGNITION,
-    ALGORITHM_OBJECT_CLASSIFICATION,
+    ALGORITHM_FACE_RECOGNITION = 0,
+    ALGORITHM_OBJECT_TRACKING = 1,
+    ALGORITHM_OBJECT_RECOGNITION = 2,
+    ALGORITHM_LINE_TRACKING = 3,
+    ALGORITHM_COLOR_RECOGNITION = 4,
+    ALGORITHM_TAG_RECOGNITION = 5,
+    ALGORITHM_OBJECT_CLASSIFICATION = 6
 }
 //% weight=100  color=#00A654 block="Huskylens"
 namespace huskylens {
@@ -160,17 +160,49 @@ namespace huskylens {
     //%block="init I2C"
     export function initI2c(): void {
         while (!readKnock()) {
-            serial.writeNumber(1);
+            basic.showLeds(`
+                # . . . #
+                . # . # .
+                . . # . .
+                . # . # .
+                # . . . #
+                `, 10)
+            basic.pause(500)
+            basic.clearScreen()
         }
-        serial.writeNumber(2);
+        basic.showLeds(`
+                . . . . .
+                . . . . #
+                . . . # .
+                # . # . .
+                . # . . .
+                `, 10)
+        basic.pause(500)        
+        basic.clearScreen()
     }
 
     //%block="init mode |%mode"
-    export function initMode(mode: protocolAlgorithm) {
+    export function initMode(mode:protocolAlgorithm) {
         while (!writeAlgorithm(mode)) {
-            serial.writeNumber(1);
+            basic.showLeds(`
+                    . . # . .
+                    . . # . .
+                    . . # . .
+                    . . . . .
+                    . . # . .
+                    `, 10)
+            basic.pause(500)
+            basic.clearScreen()
         }
-        serial.writeNumber(2);
+        basic.showLeds(`
+                    . . . . .
+                    . # . # .
+                    . . . . .
+                    # . . . #
+                    . # # # .
+                    `, 10)
+        basic.pause(500)
+        basic.clearScreen()
 
     }
 
@@ -234,7 +266,7 @@ namespace huskylens {
     function protocolWrite(buffer: Buffer) {
         //serial.writeNumber(buffer[4])
         //serial.writeLine("")
-        pins.i2cWriteBuffer(0x32, buffer, true);
+        pins.i2cWriteBuffer(0x32, buffer, false);
     }
     //
    
@@ -376,12 +408,16 @@ namespace huskylens {
 
     //
     function husky_lens_protocol_write_int16(content = 0) {
+         
         let x: number = ((content.toString()).length)
+        //serial.writeNumber(content)
+        //serial.writeLine("")
         if (send_index + x >= FRAME_BUFFER_SIZE) { send_fail = true; return; }
-        //if (IS_BIG_ENDIAN()) { __builtin_bswap16(content); }
-        //memcpy(send_buffer + send_index, &content, sizeof(content));
-        //send_buffer[send_index]=content;
-        send_index += x;
+        
+        send_buffer[send_index+1]=content;
+        //serial.writeNumber(send_buffer[send_index + 1])
+        //serial.writeLine("")
+        send_index += 2;
     }
     // 
     function protocolReadFiveInt16(command = 0) {
@@ -491,19 +527,18 @@ namespace huskylens {
     //
     let algorithmType: number
     function writeAlgorithm(algorithmType = 0) {
-
         Protocol_t[1] = algorithmType;
-        protocolWriteOneInt16(Protocol_t[1], protocolCommand.COMMAND_REQUEST_ALGORITHM);
+        protocolWriteOneInt16( protocolCommand.COMMAND_REQUEST_ALGORITHM);
         return wait(protocolCommand.COMMAND_RETURN_OK);
     }
 
     //
-    function protocolWriteOneInt16(protocol: number, command = 0) {
-        // serial.writeNumber(3)
-        // serial.writeLine("")
+    function protocolWriteOneInt16( command = 0) {
+        //serial.writeNumber(protocol)
+        //serial.writeLine("")
         Protocol_t[0] = command;
         let buffer = husky_lens_protocol_write_begin(Protocol_t[0]);
-        husky_lens_protocol_write_int16(protocol);
+        husky_lens_protocol_write_int16(Protocol_t[1]);
         let length = husky_lens_protocol_write_end();
         let Buffer = pins.createBufferFromArray(buffer);
         protocolWrite(Buffer);
