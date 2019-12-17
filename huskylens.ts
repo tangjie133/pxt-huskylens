@@ -146,10 +146,8 @@ namespace huskylens {
     //
     //%block="get ID|%ID arrow parameters|%number1"
     export function readeAppear(ID: number, number1: Content2): number {
-        let x: number
-
-        if (protocolPtr[ID - 1][0] == protocolCommand.COMMAND_RETURN_ARROW && protocolPtr[ID - 1][5] == ID) {
-
+        let y = cycle(ID, 1);
+        let x
             switch (number1) {
                 case 1:
                     x = protocolPtr[ID - 1][1]; break;
@@ -162,8 +160,7 @@ namespace huskylens {
                 default:
                     x = -1;
             }
-        }
-        if (x == 0) x = -1
+        
         return x;
     }
 
