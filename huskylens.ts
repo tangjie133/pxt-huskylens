@@ -64,8 +64,7 @@ enum protocolAlgorithm {
     ALGORITHM_OBJECT_RECOGNITION = 2,
     ALGORITHM_LINE_TRACKING = 3,
     ALGORITHM_COLOR_RECOGNITION = 4,
-    ALGORITHM_TAG_RECOGNITION = 5,
-    ALGORITHM_OBJECT_CLASSIFICATION = 6
+    ALGORITHM_TAG_RECOGNITION = 5
 }
 //% weight=100  color=#00A654 icon="\uf1dc"  block="Huskylens"
 namespace huskylens {
@@ -134,7 +133,7 @@ namespace huskylens {
      */
     //%block="get ID|%ID block parameters|%number1"
     export function readeBlock(ID: number, number1: Content1): number {
-       let y=cycle(ID,1);
+       let y=cycle(ID,0);
        let x
             switch (number1) {
                 case 1:
@@ -158,7 +157,7 @@ namespace huskylens {
     
     //%block="get ID|%ID arrow parameters|%number1"
     export function readeAppear(ID: number, number1: Content2): number {
-        let y = cycle(ID, 1);
+        let y = cycle(ID, 0);
         let x
             switch (number1) {
                 case 1:
@@ -555,13 +554,12 @@ namespace huskylens {
         protocolWrite(Buffer);
     }
     function cycle(ID: number, index = 1):number{
-        
         let counter = 0;
         for (let i=0;i<Protocol_t[1];i++){
-           
             if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_BLOCK && protocolPtr[i][5] == ID){
-                 counter++;
+                counter++;
                 if (index == counter) return i;
+                 
             }
         }
        return null;
