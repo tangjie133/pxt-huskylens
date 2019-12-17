@@ -14,7 +14,7 @@
 */// 在此处添加您的代码
 enum Content1 {
     //% block="xCenter"
-    xCenter= 1,
+    xCenter = 1,
     //% block="yCenter"
     yCenter = 2,
     //% block="width"
@@ -36,9 +36,9 @@ enum Content2 {
 //
 enum HUSKYLENSResultType_t {
     //%block="Block"
-    HUSKYLENSResultBlock=1,
+    HUSKYLENSResultBlock = 1,
     //%block="Arrow"
-    HUSKYLENSResultArrow=2,
+    HUSKYLENSResultArrow = 2,
 }
 enum protocolCommand {
     COMMAND_REQUEST = 0x20,
@@ -69,7 +69,7 @@ enum protocolAlgorithm {
 }
 //% weight=100  color=#00A654 icon="\uf1dc"  block="Huskylens"
 namespace huskylens {
-    let protocolPtr: number[][] = [[0],[0],[0],[0],[0],[0],[0],[0],[0],[0]]
+    let protocolPtr: number[][] = [[0], [0], [0], [0], [0], [0], [0], [0], [0], [0]]
     let Protocol_t: number[] = [0, 0, 0, 0, 0, 0]
     let i = 1;
     let FRAME_BUFFER_SIZE = 128
@@ -125,48 +125,48 @@ namespace huskylens {
     }
 
     //%block="get ID|%ID block parameters|%number1"
-    export function readeBlock(ID:number,number1: Content1): number {
-        let x:number
-        
-        if (protocolPtr[ID-1][0] == protocolCommand.COMMAND_RETURN_BLOCK && protocolPtr[ID-1][5]==ID){
-            
-        switch (number1) {
-            case 1:
-                x = protocolPtr[ID-1][1];break;
-            case 2:
-                x= protocolPtr[ID-1][2];break;
-            case 3:
-                x= protocolPtr[ID-1][3]; break;
-            case 4:
-                x= protocolPtr[ID-1][4];break; 
-            default:
-                x= -1;
-         }
-        }
-        if (Protocol_t[1]==0){x=-1}
-        return x;
-    }
-//
-    //%block="get ID|%ID arrow parameters|%number1"
-    export function readeAppear(ID: number, number1: Content2): number {
+    export function readeBlock(ID: number, number1: Content1): number {
         let x: number
-       
-        if (protocolPtr[ID-1][0] == protocolCommand.COMMAND_RETURN_ARROW && protocolPtr[ID-1][5] == ID) {
-             
+
+        if (protocolPtr[ID - 1][0] == protocolCommand.COMMAND_RETURN_BLOCK && protocolPtr[ID - 1][5] == ID) {
+
             switch (number1) {
                 case 1:
-                    x = protocolPtr[ID-1][1]; break;
+                    x = protocolPtr[ID - 1][1]; break;
                 case 2:
-                    x = protocolPtr[ID-1][2]; break;
+                    x = protocolPtr[ID - 1][2]; break;
                 case 3:
-                    x = protocolPtr[ID-1][3]; break;
+                    x = protocolPtr[ID - 1][3]; break;
                 case 4:
-                    x = protocolPtr[ID-1][4]; break;
+                    x = protocolPtr[ID - 1][4]; break;
                 default:
                     x = -1;
             }
         }
-        if(x==0)x=-1
+        if (Protocol_t[1] == 0) { x = -1 }
+        return x;
+    }
+    //
+    //%block="get ID|%ID arrow parameters|%number1"
+    export function readeAppear(ID: number, number1: Content2): number {
+        let x: number
+
+        if (protocolPtr[ID - 1][0] == protocolCommand.COMMAND_RETURN_ARROW && protocolPtr[ID - 1][5] == ID) {
+
+            switch (number1) {
+                case 1:
+                    x = protocolPtr[ID - 1][1]; break;
+                case 2:
+                    x = protocolPtr[ID - 1][2]; break;
+                case 3:
+                    x = protocolPtr[ID - 1][3]; break;
+                case 4:
+                    x = protocolPtr[ID - 1][4]; break;
+                default:
+                    x = -1;
+            }
+        }
+        if (x == 0) x = -1
         return x;
     }
 
@@ -192,13 +192,13 @@ namespace huskylens {
                 # . # . .
                 . # . . .
                 `, 10)
-        basic.pause(500)        
+        basic.pause(500)
         basic.clearScreen()
     }
 
     //%block="Switch to|%mode Algorithm until success"
     //% weight=90
-    export function initMode(mode:protocolAlgorithm) {
+    export function initMode(mode: protocolAlgorithm) {
         while (!writeAlgorithm(mode)) {
             basic.showLeds(`
                     . . # . .
@@ -222,12 +222,12 @@ namespace huskylens {
 
     }
 
-//
+    //
     //%block="gets the total number of learned ids"
-    export function getIds():number {
+    export function getIds(): number {
         return Protocol_t[2];
     }
-//
+    //
     //%block="gets the total number of |%Ht"
     export function getBox(Ht: HUSKYLENSResultType_t): number {
         switch (Ht) {
@@ -268,14 +268,14 @@ namespace huskylens {
     }
     //
     function husky_lens_protocol_write_begin(command = 0) {
-    
+
         //send_buffer= [0]
         send_fail = false;
         send_buffer[HEADER_0_INDEX] = 0x55;
         send_buffer[HEADER_1_INDEX] = 0xAA;
         send_buffer[ADDRESS_INDEX] = 0x11;
         send_buffer[COMMAND_INDEX] = command;
-        
+
         send_index = CONTENT_INDEX;
 
         return send_buffer;
@@ -287,23 +287,23 @@ namespace huskylens {
         pins.i2cWriteBuffer(0x32, buffer, false);
     }
     //
-   
+
     function processReturn() {
         if (!wait(protocolCommand.COMMAND_RETURN_INFO)) return false;
         //protocolReadReturnInfo(protocolInfo);
         protocolReadFiveInt16(protocolCommand.COMMAND_RETURN_INFO);
-       
+
         // protocolPtr = (Protocol_t *) realloc(protocolPtr, protocolInfo.protocolSize * sizeof(Protocol_t));
-        
+
         for (let i = 0; i < Protocol_t[1]; i++) {
             //serial.writeNumber(12)
             //serial.writeLine("")
             if (!wait()) return false;
-            if (protocolReadFiveInt161(i,protocolCommand.COMMAND_RETURN_BLOCK)) continue;
-            else if (protocolReadFiveInt161(i,protocolCommand.COMMAND_RETURN_ARROW)) continue;
+            if (protocolReadFiveInt161(i, protocolCommand.COMMAND_RETURN_BLOCK)) continue;
+            else if (protocolReadFiveInt161(i, protocolCommand.COMMAND_RETURN_ARROW)) continue;
             else return false;
         }
-       
+
         return true;
     }
     //   
@@ -408,39 +408,18 @@ namespace huskylens {
     }
 
     //
-    //function  protocolReadReturnInfo(Protocol_t & protocol){ return protocolReadFiveInt16(protocol, COMMAND_RETURN_INFO); }
-
-    //
-    function protocolWriteFiveInt16(command = 0) {
-        Protocol_t[0] = command;
-        let buffer = husky_lens_protocol_write_begin(command);
-        husky_lens_protocol_write_int16(Protocol_t[1]);
-        husky_lens_protocol_write_int16(Protocol_t[2]);
-        husky_lens_protocol_write_int16(Protocol_t[3]);
-        husky_lens_protocol_write_int16(Protocol_t[4]);
-        husky_lens_protocol_write_int16(Protocol_t[5]);
-        let length = husky_lens_protocol_write_end();
-        let Buffer = pins.createBufferFromArray(buffer);
-        protocolWrite(Buffer);
-    }
-
-    //
     function husky_lens_protocol_write_int16(content = 0) {
-         
+
         let x: number = ((content.toString()).length)
-        //serial.writeNumber(content)
-        //serial.writeLine("")
         if (send_index + x >= FRAME_BUFFER_SIZE) { send_fail = true; return; }
-        send_buffer[send_index]=content&0xff;
-        send_buffer[send_index+1] = (content >> 8) &0xff;
-        //serial.writeNumber(send_buffer[send_index])
-        //serial.writeLine("")
+        send_buffer[send_index] = content & 0xff;
+        send_buffer[send_index + 1] = (content >> 8) & 0xff;
         send_index += 2;
     }
     // 
     function protocolReadFiveInt16(command = 0) {
         if (husky_lens_protocol_read_begin(command)) {
-           
+
             Protocol_t[0] = command;
             Protocol_t[1] = husky_lens_protocol_read_int16();
             Protocol_t[2] = husky_lens_protocol_read_int16();
@@ -448,8 +427,6 @@ namespace huskylens {
             Protocol_t[4] = husky_lens_protocol_read_int16();
             Protocol_t[5] = husky_lens_protocol_read_int16();
             husky_lens_protocol_read_end();
-            //serial.writeNumber(Protocol_t[4])
-            //serial.writeLine("")
             return true;
         }
         else {
@@ -457,7 +434,7 @@ namespace huskylens {
         }
     }
     //
-    function protocolReadFiveInt161(i:number,command = 0) {
+    function protocolReadFiveInt161(i: number, command = 0) {
         if (husky_lens_protocol_read_begin(command)) {
             protocolPtr[i][0] = command;
             protocolPtr[i][1] = husky_lens_protocol_read_int16();
@@ -466,8 +443,6 @@ namespace huskylens {
             protocolPtr[i][4] = husky_lens_protocol_read_int16();
             protocolPtr[i][5] = husky_lens_protocol_read_int16();
             husky_lens_protocol_read_end();
-            //serial.writeNumber(protocolPtr[i][1])
-            //serial.writeLine("")
             return true;
         }
         else {
@@ -475,11 +450,10 @@ namespace huskylens {
         }
     }
     //
-    
+
     function husky_lens_protocol_read_int16() {
         if (content_current >= content_end || content_read_end) { receive_fail = true; return 0; }
-        //buf[6] << 8 | buf[5]
-        let result = receive_buffer[content_current + 1] << 8|receive_buffer[content_current];
+        let result = receive_buffer[content_current + 1] << 8 | receive_buffer[content_current];
         content_current += 2
         return result;
     }
@@ -493,15 +467,13 @@ namespace huskylens {
     }
     // 
     function countLearnedIDs() {
-        //serial.writeNumber(Protocol_t[3])
-           //serial.writeLine("")
         return Protocol_t[2]
     }
     //
     function countBlocks() {
         let counter = 0;
         for (let i = 0; i < Protocol_t[1]; i++) {
-            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_BLOCK ) counter++;
+            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_BLOCK) counter++;
         }
         return counter;
     }
@@ -545,22 +517,18 @@ namespace huskylens {
     }
     //
     function writeAlgorithm(algorithmType: number) {
-         //serial.writeNumber(algorithmType)
-        //serial.writeLine("")
-        Protocol_t[1] = algorithmType;
-        protocolWriteOneInt16( protocolCommand.COMMAND_REQUEST_ALGORITHM);
+       
+        protocolWriteOneInt16(algorithmType,protocolCommand.COMMAND_REQUEST_ALGORITHM);
         return wait(protocolCommand.COMMAND_RETURN_OK);
     }
 
     //
-    function protocolWriteOneInt16( command = 0) {
-        //serial.writeNumber(protocol)
-        //serial.writeLine("")
-        Protocol_t[0] = command;
-        let buffer = husky_lens_protocol_write_begin(Protocol_t[0]);
-        husky_lens_protocol_write_int16(Protocol_t[1]);
+    function protocolWriteOneInt16(algorithmType:number,command = 0) {
+        let buffer = husky_lens_protocol_write_begin(command);
+        husky_lens_protocol_write_int16(algorithmType);
         let length = husky_lens_protocol_write_end();
         let Buffer = pins.createBufferFromArray(buffer);
         protocolWrite(Buffer);
     }
 }
+
