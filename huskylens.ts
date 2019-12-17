@@ -103,7 +103,9 @@ namespace huskylens {
         protocolWriteCommand(protocolCommand.COMMAND_REQUEST)
         processReturn();
     }
-
+    /**
+     * @param ID to ID ,eg: 1
+     */
     //% block="determine whether ID|%ID is learned in the result"
     export function isLearned(ID: number): boolean {
         let x = countLearnedIDs();
@@ -111,6 +113,9 @@ namespace huskylens {
         return false;
     }
 
+    /**
+     * @param ID to ID ,eg: 1
+     */
     //% block="determine if the ID |%ID |%Ht is in the screen"
     export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): boolean {
         switch (Ht) {
@@ -124,6 +129,9 @@ namespace huskylens {
         //return false;
     }
 
+    /**
+     * @param ID to ID ,eg: 1
+     */
     //%block="get ID|%ID block parameters|%number1"
     export function readeBlock(ID: number, number1: Content1): number {
        let y=cycle(ID,1);
@@ -144,6 +152,10 @@ namespace huskylens {
         return x;
     }
     //
+    /**
+     * @param ID to ID ,eg: 1
+     */
+    
     //%block="get ID|%ID arrow parameters|%number1"
     export function readeAppear(ID: number, number1: Content2): number {
         let y = cycle(ID, 1);
