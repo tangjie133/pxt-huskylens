@@ -67,7 +67,7 @@ enum protocolAlgorithm {
     ALGORITHM_TAG_RECOGNITION = 5,
     ALGORITHM_OBJECT_CLASSIFICATION = 6
 }
-//% weight=100  color=#00A654 block="Huskylens"
+//% weight=100  color=#00A654 icon="\uf1dc"  block="Huskylens"
 namespace huskylens {
     let protocolPtr: number[][] = [[0],[0],[0],[0],[0],[0],[0],[0],[0],[0]]
     let Protocol_t: number[] = [0, 0, 0, 0, 0, 0]
@@ -98,6 +98,7 @@ namespace huskylens {
     let command: number
     let content: number
     //% block="request data once and store the data in the result"
+    //% weight=90
     export function request(): void {
         protocolWriteCommand(protocolCommand.COMMAND_REQUEST)
         processReturn();
@@ -111,14 +112,14 @@ namespace huskylens {
     }
 
     //% block="determine if the ID |%ID |%Ht is in the screen"
-    export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): number {
+    export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): boolean {
         switch (Ht) {
             case 1:
-                if (countBlocks() != 0) return 1;
+                if (countBlocks() != 0) return true;
             case 2:
-                if (countArrows() != 0) return 1;
+                if (countArrows() != 0) return true;
             default:
-                return 0;
+                return false;
         }
         //return false;
     }
@@ -171,6 +172,7 @@ namespace huskylens {
 
 
     //%block="Initialize I2C until successful"
+    //% weight=90
     export function initI2c(): void {
         while (!readKnock()) {
             basic.showLeds(`
@@ -195,6 +197,7 @@ namespace huskylens {
     }
 
     //%block="Switch to|%mode Algorithm until success"
+    //% weight=90
     export function initMode(mode:protocolAlgorithm) {
         while (!writeAlgorithm(mode)) {
             basic.showLeds(`
