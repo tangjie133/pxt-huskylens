@@ -115,9 +115,9 @@ namespace huskylens {
     export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): boolean {
         switch (Ht) {
             case 1:
-                if (countBlocks() != 0) return true;
+                if (countBlocks(ID) != 0) return true;
             case 2:
-                if (countArrows() != 0) return true;
+                if (countArrows(ID) != 0) return true;
             default:
                 return false;
         }
@@ -126,24 +126,21 @@ namespace huskylens {
 
     //%block="get ID|%ID block parameters|%number1"
     export function readeBlock(ID: number, number1: Content1): number {
-        let x: number
-
-        if (protocolPtr[ID - 1][0] == protocolCommand.COMMAND_RETURN_BLOCK && protocolPtr[ID - 1][5] == ID) {
-
+       let y=cycle(ID,1);
+       let x
             switch (number1) {
                 case 1:
-                    x = protocolPtr[ID - 1][1]; break;
+                     x = protocolPtr[y][1]; break;
                 case 2:
-                    x = protocolPtr[ID - 1][2]; break;
+                     x = protocolPtr[y][2]; break;
                 case 3:
-                    x = protocolPtr[ID - 1][3]; break;
+                     x = protocolPtr[y][3]; break;
                 case 4:
-                    x = protocolPtr[ID - 1][4]; break;
+                     x = protocolPtr[y][4]; break;
                 default:
-                    x = -1;
+                     x = -1;
             }
-        }
-        if (Protocol_t[1] == 0) { x = -1 }
+        
         return x;
     }
     //
@@ -232,9 +229,9 @@ namespace huskylens {
     export function getBox(Ht: HUSKYLENSResultType_t): number {
         switch (Ht) {
             case 1:
-                return countBlocks();
+                return countBlocks_s();
             case 2:
-                return countArrows();
+                return countArrows_s();
             default:
                 return 0;
         }
@@ -467,21 +464,39 @@ namespace huskylens {
     }
     // 
     function countLearnedIDs() {
+        //serial.writeNumber(Protocol_t[2])
+        //serial.writeLine("")
         return Protocol_t[2]
     }
     //
-    function countBlocks() {
+    function countBlocks(ID:number) {
         let counter = 0;
         for (let i = 0; i < Protocol_t[1]; i++) {
-            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_BLOCK) counter++;
+            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_BLOCK && protocolPtr[i][5]==ID) counter++;
+        }
+        return counter;
+    }
+//
+    function countBlocks_s() {
+        let counter = 0;
+        for (let i = 0; i < Protocol_t[1]; i++) {
+            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_BLOCK ) counter++;
         }
         return counter;
     }
     //
-    function countArrows() {
+    function countArrows(ID:number) {
         let counter = 0;
         for (let i = 0; i < Protocol_t[1]; i++) {
-            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_ARROW) counter++;
+            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_ARROW && protocolPtr[i][5] == ID) counter++;
+        }
+        return counter;
+    }
+//
+    function countArrows_s() {
+        let counter = 0;
+        for (let i = 0; i < Protocol_t[1]; i++) {
+            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_ARROW ) counter++;
         }
         return counter;
     }
@@ -529,6 +544,15 @@ namespace huskylens {
         let length = husky_lens_protocol_write_end();
         let Buffer = pins.createBufferFromArray(buffer);
         protocolWrite(Buffer);
+    }
+    function cycle(ID: number, index = 1):number{
+        let counter = 0;
+        for (let i=0;i<Protocol_t[1];i++){
+            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_BLOCK && protocolPtr[i][5] == ID){
+                if (index == counter++) return i;
+            }
+        }
+       return null;
     }
 }
 
