@@ -133,7 +133,7 @@ namespace huskylens {
      */
     //%block="get ID|%ID block parameters|%number1"
     export function readeBlock(ID: number, number1: Content1): number {
-       let y=cycle(ID,0);
+       let y=cycle(ID,1);
        let x
             switch (number1) {
                 case 1:
@@ -153,11 +153,36 @@ namespace huskylens {
     //
     /**
      * @param ID to ID ,eg: 1
+     * @param index to index ,eg: 1
+     */
+    //%block="gets the parameter of ID|%ID to the |%index box from the result|%number1"
+    export function readeBlock_index(ID: number, number1: Content1,index:number): number {
+        let y = cycle(ID, index);
+        let x
+        switch (number1) {
+            case 1:
+                x = protocolPtr[y][1]; break;
+            case 2:
+                x = protocolPtr[y][2]; break;
+            case 3:
+                x = protocolPtr[y][3]; break;
+            case 4:
+                x = protocolPtr[y][4]; break;
+            default:
+                x = -1;
+        }
+
+        return x;
+    }
+    //
+
+    /**
+     * @param ID to ID ,eg: 1
      */
     
     //%block="get ID|%ID arrow parameters|%number1"
     export function readeAppear(ID: number, number1: Content2): number {
-        let y = cycle(ID, 0);
+        let y = cycle(ID, 1);
         let x
             switch (number1) {
                 case 1:
@@ -174,7 +199,31 @@ namespace huskylens {
         
         return x;
     }
+//
+    /**
+        * @param ID to ID ,eg: 1
+        * @param index to index ,eg: 1
+    */
 
+    //%block="gets the parameter for the |%index arrow with ID|%ID from the result"
+    export function readeAppear_index(ID: number, number1: Content2,index:number): number {
+        let y = cycle(ID, index);
+        let x
+        switch (number1) {
+            case 1:
+                x = protocolPtr[ID - 1][1]; break;
+            case 2:
+                x = protocolPtr[ID - 1][2]; break;
+            case 3:
+                x = protocolPtr[ID - 1][3]; break;
+            case 4:
+                x = protocolPtr[ID - 1][4]; break;
+            default:
+                x = -1;
+        }
+
+        return x;
+    }
 
     //%block="Initialize I2C until successful"
     //% weight=90
@@ -240,6 +289,21 @@ namespace huskylens {
                 return countBlocks_s();
             case 2:
                 return countArrows_s();
+            default:
+                return 0;
+        }
+    }
+    //
+      /**
+        * @param ID to ID ,eg: 1
+     */
+    //%block="gets the total ID|%ID|%Htfrom the result"
+    export function getBox_S(ID:number,Ht: HUSKYLENSResultType_t): number {
+        switch (Ht) {
+            case 1:
+                return countBlocks(ID);
+            case 2:
+                return countArrows(ID);
             default:
                 return 0;
         }
