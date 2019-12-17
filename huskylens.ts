@@ -66,7 +66,7 @@ enum protocolAlgorithm {
     ALGORITHM_COLOR_RECOGNITION = 4,
     ALGORITHM_TAG_RECOGNITION = 5
 }
-//% weight=100  color=#00A654 icon="\uf1dc"  block="Huskylens"
+//% weight=100  color=#00A654 icon="\uf083"  block="Huskylens"
 namespace huskylens {
     let protocolPtr: number[][] = [[0], [0], [0], [0], [0], [0], [0], [0], [0], [0]]
     let Protocol_t: number[] = [0, 0, 0, 0, 0, 0]
