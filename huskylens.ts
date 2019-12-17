@@ -225,7 +225,7 @@ namespace huskylens {
 //
     //%block="gets the total number of learned ids"
     export function getIds():number {
-        return Protocol_t[1];
+        return Protocol_t[2];
     }
 //
     //%block="gets the total number of |%Ht"
@@ -493,7 +493,9 @@ namespace huskylens {
     }
     // 
     function countLearnedIDs() {
-        return Protocol_t[1]
+        //serial.writeNumber(Protocol_t[3])
+           //serial.writeLine("")
+        return Protocol_t[2]
     }
     //
     function countBlocks() {
