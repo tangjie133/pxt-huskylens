@@ -546,10 +546,13 @@ namespace huskylens {
         protocolWrite(Buffer);
     }
     function cycle(ID: number, index = 1):number{
+        
         let counter = 0;
         for (let i=0;i<Protocol_t[1];i++){
+           
             if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_BLOCK && protocolPtr[i][5] == ID){
-                if (index == counter++) return i;
+                 counter++;
+                if (index == counter) return i;
             }
         }
        return null;
