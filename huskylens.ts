@@ -1,4 +1,3 @@
-
 /** 
  * @file pxt-huskylens/huskylens.ts
  * @brief DFRobot's huskylens makecode library.
@@ -9,9 +8,10 @@
  * @copyright    MIT Lesser General Public License
  * 
  * @author [email](jie.tang@dfrobot.com)
- * @version  V0.0.1
+ * @version  V0.0.3
  * @date  2019-12-16
-*/// 在此处添加您的代码
+*/
+// 在此处添加您的代码
 enum Content1 {
     //% block="xCenter"
     xCenter = 1,
