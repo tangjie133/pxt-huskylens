@@ -8,7 +8,7 @@
  * @copyright    MIT Lesser General Public License
  * 
  * @author [email](jie.tang@dfrobot.com)
- * @version  V0.0.3
+ * @version  V0.0.4
  * @date  2019-12-16
 */
 // 在此处添加您的代码
@@ -107,8 +107,8 @@ namespace huskylens {
      */
     //% block="determine whether ID|%ID is learned in the result"
     export function isLearned(ID: number): boolean {
-        let x = countLearnedIDs();
-        if (ID <= x) return true;
+        let hk_x = countLearnedIDs();
+        if (ID <= hk_x) return true;
         return false;
     }
 
@@ -133,22 +133,22 @@ namespace huskylens {
      */
     //%block="get ID|%ID block parameters|%number1"
     export function readeBlock(ID: number, number1: Content1): number {
-       let y=cycle(ID,1);
-       let x
+       let hk_y=cycle(ID,1);
+       let hk_x
             switch (number1) {
                 case 1:
-                     x = protocolPtr[y][1]; break;
+                     hk_x = protocolPtr[hk_y][1]; break;
                 case 2:
-                     x = protocolPtr[y][2]; break;
+                     hk_x = protocolPtr[hk_y][2]; break;
                 case 3:
-                     x = protocolPtr[y][3]; break;
+                     hk_x = protocolPtr[hk_y][3]; break;
                 case 4:
-                     x = protocolPtr[y][4]; break;
+                     hk_x = protocolPtr[hk_y][4]; break;
                 default:
-                     x = -1;
+                     hk_x = -1;
             }
         
-        return x;
+        return hk_x;
     }
     //
     /**
@@ -157,22 +157,22 @@ namespace huskylens {
      */
     //%block="gets the parameter of ID|%ID to the |%index box from the result|%number1"
     export function readeBlock_index(ID: number, number1: Content1,index:number): number {
-        let y = cycle(ID, index);
-        let x
+        let hk_y = cycle(ID, index);
+        let hk_x
         switch (number1) {
             case 1:
-                x = protocolPtr[y][1]; break;
+                hk_x = protocolPtr[hk_y][1]; break;
             case 2:
-                x = protocolPtr[y][2]; break;
+                hk_x = protocolPtr[hk_y][2]; break;
             case 3:
-                x = protocolPtr[y][3]; break;
+                hk_x = protocolPtr[hk_y][3]; break;
             case 4:
-                x = protocolPtr[y][4]; break;
+                hk_x = protocolPtr[hk_y][4]; break;
             default:
-                x = -1;
+                hk_x = -1;
         }
 
-        return x;
+        return hk_x;
     }
     //
 
@@ -182,22 +182,22 @@ namespace huskylens {
     
     //%block="get ID|%ID arrow parameters|%number1"
     export function readeAppear(ID: number, number1: Content2): number {
-        let y = cycle(ID, 1);
-        let x
+        let hk_y = cycle(ID, 1);
+        let hk_x
             switch (number1) {
                 case 1:
-                    x = protocolPtr[ID - 1][1]; break;
+                    hk_x = protocolPtr[hk_y][1]; break;
                 case 2:
-                    x = protocolPtr[ID - 1][2]; break;
+                    hk_x = protocolPtr[hk_y][2]; break;
                 case 3:
-                    x = protocolPtr[ID - 1][3]; break;
+                    hk_x = protocolPtr[hk_y][3]; break;
                 case 4:
-                    x = protocolPtr[ID - 1][4]; break;
+                    hk_x = protocolPtr[hk_y][4]; break;
                 default:
-                    x = -1;
+                    hk_x = -1;
             }
         
-        return x;
+        return hk_x;
     }
 //
     /**
@@ -207,22 +207,22 @@ namespace huskylens {
 
     //%block="gets the parameter for the |%index arrow with ID|%ID from the result"
     export function readeAppear_index(ID: number, number1: Content2,index:number): number {
-        let y = cycle(ID, index);
-        let x
+        let hk_y = cycle(ID, index);
+        let hk_x
         switch (number1) {
             case 1:
-                x = protocolPtr[ID - 1][1]; break;
+                hk_x = protocolPtr[hk_y][1]; break;
             case 2:
-                x = protocolPtr[ID - 1][2]; break;
+                hk_x = protocolPtr[hk_y][2]; break;
             case 3:
-                x = protocolPtr[ID - 1][3]; break;
+                hk_x = protocolPtr[hk_y][3]; break;
             case 4:
-                x = protocolPtr[ID - 1][4]; break;
+                hk_x = protocolPtr[hk_y][4]; break;
             default:
-                x = -1;
+                hk_x = -1;
         }
 
-        return x;
+        return hk_x;
     }
 
     //%block="Initialize I2C until successful"
@@ -312,26 +312,26 @@ namespace huskylens {
     function validateCheckSum() {
 
         let stackSumIndex = receive_buffer[3] + CONTENT_INDEX;
-        let sum = 0;
+        let hk_sum = 0;
         for (let i = 0; i < stackSumIndex; i++) {
-            sum += receive_buffer[i];
+            hk_sum += receive_buffer[i];
         }
-        sum = sum & 0xff;
+        hk_sum = hk_sum & 0xff;
 
-        return (sum == receive_buffer[stackSumIndex]);
+        return (hk_sum == receive_buffer[stackSumIndex]);
     }
     //
     function husky_lens_protocol_write_end() {
         if (send_fail) { return 0; }
         if (send_index + 1 >= FRAME_BUFFER_SIZE) { return 0; }
         send_buffer[CONTENT_SIZE_INDEX] = send_index - CONTENT_INDEX;
-        let sum = 0;
+        let hk_sum = 0;
         for (let i = 0; i < send_index; i++) {
-            sum += send_buffer[i];
+            hk_sum += send_buffer[i];
         }
 
-        sum = sum & 0xff;
-        send_buffer[send_index] = sum;
+        hk_sum = hk_sum & 0xff;
+        send_buffer[send_index] = hk_sum;
         send_index++;
         return send_index;
     }
