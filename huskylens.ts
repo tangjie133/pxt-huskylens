@@ -8,7 +8,7 @@
  * @copyright    MIT Lesser General Public License
  * 
  * @author [email](jie.tang@dfrobot.com)
- * @version  V0.0.5
+ * @version  V0.0.6
  * @date  2019-12-16
 */
 // 在此处添加您的代码
@@ -218,8 +218,8 @@ namespace huskylens {
         * @param index to index ,eg: 1
     */
 
-    //%block="gets the parameter for the |%index arrow with ID|%ID from the result"
-    export function readeAppear_index(ID: number, number1: Content2,index:number): number {
+    //%block="gets the parameter of ID|%ID to the |%index arrow from the result|%number1"
+    export function readeAppear_index(index:number, number1: Content2, ID:number): number {
         let hk_y = cycle(ID, index);
         let hk_x
         if (countArrows(ID) != 0) {
