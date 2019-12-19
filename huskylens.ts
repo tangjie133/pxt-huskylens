@@ -8,7 +8,7 @@
  * @copyright    MIT Lesser General Public License
  * 
  * @author [email](jie.tang@dfrobot.com)
- * @version  V0.0.4
+ * @version  V0.0.5
  * @date  2019-12-16
 */
 // 在此处添加您的代码
@@ -115,18 +115,18 @@ namespace huskylens {
     /**
      * @param ID to ID ,eg: 1
      */
-    //% block="determine if the ID |%ID |%Ht is in the screen"
-    export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): boolean {
-        switch (Ht) {
-            case 1:
-                if (countBlocks(ID) != 0) return true;
-            case 2:
-                if (countArrows(ID) != 0) return true;
-            default:
-                return false;
-        }
-        //return false;
-    }
+    // //% block="determine if the ID |%ID |%Ht is in the screen"
+    // export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): boolean {
+    //     switch (Ht) {
+    //         case 1:
+    //             if (countBlocks(ID) != 0) return true;
+    //         case 2:
+    //             if (countArrows(ID) != 0) return true;
+    //         default:
+    //             return false;
+    //     }
+    //     //return false;
+    // }
 
     /**
      * @param ID to ID ,eg: 1
@@ -135,23 +135,22 @@ namespace huskylens {
     export function readeBlock(ID: number, number1: Content1): number {
        let hk_y=cycle(ID,1);
        let hk_x
-       if (hk_y != null) {
-            switch (number1) {
-                case 1:
-                     hk_x = protocolPtr[hk_y][1]; break;
-                case 2:
-                     hk_x = protocolPtr[hk_y][2]; break;
-                case 3:
-                     hk_x = protocolPtr[hk_y][3]; break;
-                case 4:
-                     hk_x = protocolPtr[hk_y][4]; break;
-                default:
-                     hk_x = -1;
+       if (countBlocks(ID) != 0){
+            if (hk_y != null) {
+                    switch (number1) {
+                        case 1:
+                            hk_x = protocolPtr[hk_y][1]; break;
+                        case 2:
+                            hk_x = protocolPtr[hk_y][2]; break;
+                        case 3:
+                            hk_x = protocolPtr[hk_y][3]; break;
+                        case 4:
+                            hk_x = protocolPtr[hk_y][4]; break;
+                    }
             }
-       }
-       else{
-           hk_x = -1;
-       }
+            else hk_x = -1;
+          }
+        else hk_x = -1;
         return hk_x;
     }
     //
@@ -163,23 +162,24 @@ namespace huskylens {
     export function readeBlock_index(ID: number, number1: Content1,index:number): number {
         let hk_y = cycle(ID, index);
         let hk_x
-        if (hk_y != null) {
-            switch (number1) {
-                case 1:
-                    hk_x = protocolPtr[hk_y][1]; break;
-                case 2:
-                    hk_x = protocolPtr[hk_y][2]; break;
-                case 3:
-                    hk_x = protocolPtr[hk_y][3]; break;
-                case 4:
-                    hk_x = protocolPtr[hk_y][4]; break;
-                default:
-                    hk_x = -1;
+        if (countBlocks(ID) != 0) {
+            if (hk_y != null) {
+                switch (number1) {
+                    case 1:
+                        hk_x = protocolPtr[hk_y][1]; break;
+                    case 2:
+                        hk_x = protocolPtr[hk_y][2]; break;
+                    case 3:
+                        hk_x = protocolPtr[hk_y][3]; break;
+                    case 4:
+                        hk_x = protocolPtr[hk_y][4]; break;
+                    default:
+                        hk_x = -1;
+                }
             }
+            else hk_x = -1;
         }
-        else{
-            hk_x = -1;
-        }
+        else hk_x = -1;
         return hk_x;
     }
     //
@@ -192,23 +192,24 @@ namespace huskylens {
     export function readeAppear(ID: number, number1: Content2): number {
         let hk_y = cycle(ID, 1);
         let hk_x
-        if (hk_y != null){
-            switch (number1) {
-                case 1:
-                    hk_x = protocolPtr[hk_y][1]; break;
-                case 2:
-                    hk_x = protocolPtr[hk_y][2]; break;
-                case 3:
-                    hk_x = protocolPtr[hk_y][3]; break;
-                case 4:
-                    hk_x = protocolPtr[hk_y][4]; break;
-                default:
-                    hk_x = -1;
+        if (countArrows(ID) != 0){
+            if (hk_y != null){
+                switch (number1) {
+                    case 1:
+                        hk_x = protocolPtr[hk_y][1]; break;
+                    case 2:
+                        hk_x = protocolPtr[hk_y][2]; break;
+                    case 3:
+                        hk_x = protocolPtr[hk_y][3]; break;
+                    case 4:
+                        hk_x = protocolPtr[hk_y][4]; break;
+                    default:
+                        hk_x = -1;
+                }
             }
+            else hk_x =-1;
         }
-        else{
-            hk_x =-1;
-        }
+        else hk_x = -1;
         return hk_x;
     }
 //
@@ -221,23 +222,24 @@ namespace huskylens {
     export function readeAppear_index(ID: number, number1: Content2,index:number): number {
         let hk_y = cycle(ID, index);
         let hk_x
-        if (hk_y!=null){
-        switch (number1) {
-            case 1:
-                hk_x = protocolPtr[hk_y][1]; break;
-            case 2:
-                hk_x = protocolPtr[hk_y][2]; break;
-            case 3:
-                hk_x = protocolPtr[hk_y][3]; break;
-            case 4:
-                hk_x = protocolPtr[hk_y][4]; break;
-            default:
-                hk_x = -1;
-        }}
-        else{
-            hk_x = -1;
+        if (countArrows(ID) != 0) {
+            if (hk_y!=null){
+                switch (number1) {
+                    case 1:
+                        hk_x = protocolPtr[hk_y][1]; break;
+                    case 2:
+                        hk_x = protocolPtr[hk_y][2]; break;
+                    case 3:
+                        hk_x = protocolPtr[hk_y][3]; break;
+                    case 4:
+                        hk_x = protocolPtr[hk_y][4]; break;
+                    default:
+                        hk_x = -1;
+                }
+            }
+            else hk_x = -1;
         }
-
+        else hk_x = -1;
         return hk_x;
     }
 
