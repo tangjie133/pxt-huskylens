@@ -8,7 +8,7 @@
  * @copyright    MIT Lesser General Public License
  * 
  * @author [email](jie.tang@dfrobot.com)
- * @version  V0.0.7
+ * @version  V0.0.8
  * @date  2019-12-16
 */
 // 在此处添加您的代码
@@ -17,9 +17,9 @@ enum Content1 {
     xCenter = 1,
     //% block="yCenter"
     yCenter = 2,
-    //% block="width"
+    //% block="Length"
     width = 3,
-    //% block="height"
+    //% block="Width"
     height = 4
 }
 //
