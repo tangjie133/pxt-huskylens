@@ -133,7 +133,7 @@ namespace huskylens {
      */
     //%block="get ID|%ID block parameters|%number1"
     export function readeBlock(ID: number, number1: Content1): number {
-       let hk_y=cycle(ID,1);
+        let hk_y = cycle_block(ID,1);
        let hk_x
        if (countBlocks(ID) != 0){
             if (hk_y != null) {
@@ -160,7 +160,7 @@ namespace huskylens {
      */
     //%block="gets the parameter of ID|%ID to the |%index box from the result|%number1"
     export function readeBlock_index(ID: number, number1: Content1,index:number): number {
-        let hk_y = cycle(ID, index);
+        let hk_y = cycle_block(ID, index);
         let hk_x
         if (countBlocks(ID) != 0) {
             if (hk_y != null) {
@@ -190,10 +190,11 @@ namespace huskylens {
     
     //%block="get ID|%ID arrow parameters|%number1"
     export function readeAppear(ID: number, number1: Content2): number {
-        let hk_y = cycle(ID, 1);
+        let hk_y = cycle_arrow(ID, 1);
         let hk_x
         if (countArrows(ID) != 0){
             if (hk_y != null){
+              
                 switch (number1) {
                     case 1:
                         hk_x = protocolPtr[hk_y][1]; break;
@@ -220,7 +221,7 @@ namespace huskylens {
 
     //%block="gets the parameter of ID|%ID to the |%index arrow from the result|%number1"
     export function readeAppear_index(index:number, number1: Content2, ID:number): number {
-        let hk_y = cycle(ID, index);
+        let hk_y = cycle_arrow(ID, index);
         let hk_x
         if (countArrows(ID) != 0) {
             if (hk_y!=null){
@@ -635,7 +636,7 @@ namespace huskylens {
         let Buffer = pins.createBufferFromArray(buffer);
         protocolWrite(Buffer);
     }
-    function cycle(ID: number, index = 1):number{
+    function cycle_block(ID: number, index = 1):number{
         let counter = 0;
         for (let i=0;i<Protocol_t[1];i++){
             if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_BLOCK && protocolPtr[i][5] == ID){
@@ -645,6 +646,17 @@ namespace huskylens {
             }
         }
        return null;
+    }
+    function cycle_arrow(ID: number, index = 1): number {
+        let counter = 0;
+        for (let i = 0; i < Protocol_t[1]; i++) {
+            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_ARROW && protocolPtr[i][5] == ID) {
+                counter++;
+                if (index == counter) return i;
+
+            }
+        }
+        return null;
     }
 }
 
