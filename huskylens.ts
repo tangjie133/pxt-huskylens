@@ -8,7 +8,7 @@
  * @copyright    MIT Lesser General Public License
  * 
  * @author [email](jie.tang@dfrobot.com)
- * @version  V0.0.6
+ * @version  V0.0.7
  * @date  2019-12-16
 */
 // 在此处添加您的代码
