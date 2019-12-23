@@ -59,11 +59,17 @@ enum protocolCommand {
 }
 
 enum protocolAlgorithm {
+    //%block="Face Recognition"
     ALGORITHM_FACE_RECOGNITION = 0,
+    //%block="Object Tracking"
     ALGORITHM_OBJECT_TRACKING = 1,
+    //%block="Object Recognition"
     ALGORITHM_OBJECT_RECOGNITION = 2,
+    //%block="Line Tracking"
     ALGORITHM_LINE_TRACKING = 3,
+    //%block="Color Recognition"
     ALGORITHM_COLOR_RECOGNITION = 4,
+    //%block="Tag Recognition"
     ALGORITHM_TAG_RECOGNITION = 5
 }
 //% weight=100  color=#00A654 icon="\uf083"  block="Huskylens"
@@ -96,8 +102,8 @@ namespace huskylens {
 
     let command: number
     let content: number
-    //% block="request data once and store the data in the result"
-    //% weight=90
+    //% block="request data once and store into the result."
+    //% weight=80
     export function request(): void {
         protocolWriteCommand(protocolCommand.COMMAND_REQUEST)
         processReturn();
@@ -105,7 +111,8 @@ namespace huskylens {
     /**
      * @param ID to ID ,eg: 1
      */
-    //% block="determine whether ID|%ID is learned in the result"
+    //% block="from result, whether ID|%ID is learned?"
+    //% weight=75
     export function isLearned(ID: number): boolean {
         let hk_x = countLearnedIDs();
         if (ID <= hk_x) return true;
@@ -115,23 +122,25 @@ namespace huskylens {
     /**
      * @param ID to ID ,eg: 1
      */
-    // //% block="determine if the ID |%ID |%Ht is in the screen"
-    // export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): boolean {
-    //     switch (Ht) {
-    //         case 1:
-    //             if (countBlocks(ID) != 0) return true;
-    //         case 2:
-    //             if (countArrows(ID) != 0) return true;
-    //         default:
-    //             return false;
-    //     }
-    //     //return false;
-    // }
+    //% block="from result, whether ID |%ID |%Ht is appear in the screen?"
+     //% weight=70
+    export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): boolean {
+        switch (Ht) {
+            case 1:
+                if (countBlocks(ID) != 0) return true;
+            case 2:
+                if (countArrows(ID) != 0) return true;
+            default:
+                return false;
+        }
+        //return false;
+    }
 
     /**
      * @param ID to ID ,eg: 1
      */
-    //%block="get ID|%ID block parameters|%number1"
+    //%block="from result, get ID|%ID block parameter|%number1"
+     //% weight=65
     export function readeBlock(ID: number, number1: Content1): number {
         let hk_y = cycle_block(ID,1);
        let hk_x
@@ -158,7 +167,9 @@ namespace huskylens {
      * @param ID to ID ,eg: 1
      * @param index to index ,eg: 1
      */
-    //%block="gets the parameter of ID|%ID to the |%index box from the result|%number1"
+    //%block="from result, get ID|%ID block No.|%index parameter |%number1"
+    //% weight=45
+    //% advanced=true
     export function readeBlock_index(ID: number, number1: Content1,index:number): number {
         let hk_y = cycle_block(ID, index);
         let hk_x
@@ -188,7 +199,8 @@ namespace huskylens {
      * @param ID to ID ,eg: 1
      */
     
-    //%block="get ID|%ID arrow parameters|%number1"
+    //%block="from result, get ID |%ID arrow parameter |%number1"
+     //% weight=60
     export function readeAppear(ID: number, number1: Content2): number {
         let hk_y = cycle_arrow(ID, 1);
         let hk_x
@@ -219,7 +231,9 @@ namespace huskylens {
         * @param index to index ,eg: 1
     */
 
-    //%block="gets the parameter of ID|%ID to the |%index arrow from the result|%number1"
+    //%block="from result, get ID|%ID arrow No.|%index parameter |%number1"
+    //% weight=35
+    //% advanced=true
     export function readeAppear_index(index:number, number1: Content2, ID:number): number {
         let hk_y = cycle_arrow(ID, index);
         let hk_x
@@ -244,7 +258,7 @@ namespace huskylens {
         return hk_x;
     }
 
-    //%block="Initialize I2C until successful"
+    //%block="initialize via I2C until success"
     //% weight=90
     export function initI2c(): void {
         while (!readKnock()) {
@@ -269,8 +283,8 @@ namespace huskylens {
         basic.clearScreen()
     }
 
-    //%block="Switch to|%mode Algorithm until success"
-    //% weight=90
+    //%block="switch to|%mode algorithm until success"
+    //% weight=85
     export function initMode(mode: protocolAlgorithm) {
         while (!writeAlgorithm(mode)) {
             basic.showLeds(`
@@ -296,12 +310,16 @@ namespace huskylens {
     }
 
     //
-    //%block="gets the total number of learned ids"
+    //%block="from result, get total number of learned IDs"
+    //% weight=55
+    //% advanced=true
     export function getIds(): number {
         return Protocol_t[2];
     }
     //
-    //%block="gets the total number of |%Ht"
+    //%block="from result, get total number of |%Ht"
+     //% weight=50
+      //% advanced=true
     export function getBox(Ht: HUSKYLENSResultType_t): number {
         switch (Ht) {
             case 1:
@@ -316,7 +334,9 @@ namespace huskylens {
       /**
         * @param ID to ID ,eg: 1
      */
-    //%block="gets the total ID|%ID|%Htfrom the result"
+    //%block="from result, get total number of ID|%ID|%Ht"
+     //% weight=45
+      //% advanced=true
     export function getBox_S(ID:number,Ht: HUSKYLENSResultType_t): number {
         switch (Ht) {
             case 1:
@@ -442,14 +462,22 @@ namespace huskylens {
         return (input.runningTimeMicros() - timeOutTimer > timeOutDuration);
     }
     //
+    let m_i=16
     function protocolAvailable() {
-        let buf = pins.i2cReadBuffer(0x32, 16, false)
+        let buf=pins.createBuffer(16)
+        if (m_i==16){
+           buf = pins.i2cReadBuffer(0x32, 16, false);
+           //for (let i = 0; i < 16; i++)M_buf[i] = buf[i]
+            m_i=0;
+            }
         //serial.writeNumber(buf[4])
         //serial.writeLine("")
-        for (let i = 0; i < 16; i++) {
+        for (let i = m_i; i < 16; i++) {
             if (husky_lens_protocol_receive(buf[i])) {
+                m_i++;
                 return true;
             }
+            m_i++;
         }
         return false
     }
