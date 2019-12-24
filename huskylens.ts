@@ -102,7 +102,7 @@ namespace huskylens {
 
     let command: number
     let content: number
-    //% block="request data once and store into the result."
+    //% block="request data once and store into the result"
     //% weight=80
     export function request(): void {
         protocolWriteCommand(protocolCommand.COMMAND_REQUEST)
@@ -111,7 +111,7 @@ namespace huskylens {
     /**
      * @param ID to ID ,eg: 1
      */
-    //% block="from result, whether ID|%ID is learned?"
+    //% block="from result,whether ID|%ID is learned"
     //% weight=75
     export function isLearned(ID: number): boolean {
         let hk_x = countLearnedIDs();
@@ -122,7 +122,7 @@ namespace huskylens {
     /**
      * @param ID to ID ,eg: 1
      */
-    //% block="from result, whether ID |%ID |%Ht is appear in the screen?"
+    //% block="from result, whether ID |%ID |%Ht is appear in the screen"
      //% weight=70
     export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): boolean {
         switch (Ht) {
@@ -170,7 +170,7 @@ namespace huskylens {
     //%block="from result, get ID|%ID block No.|%index parameter |%number1"
     //% weight=45
     //% advanced=true
-    export function readeBlock_index(ID: number, number1: Content1,index:number): number {
+    export function readeBlock_index(ID: number, index: number, number1: Content1): number {
         let hk_y = cycle_block(ID, index);
         let hk_x
         if (countBlocks(ID) != 0) {
@@ -234,7 +234,7 @@ namespace huskylens {
     //%block="from result, get ID|%ID arrow No.|%index parameter |%number1"
     //% weight=35
     //% advanced=true
-    export function readeAppear_index(index:number, number1: Content2, ID:number): number {
+    export function readeAppear_index(index: number, ID: number,number1: Content2): number {
         let hk_y = cycle_arrow(ID, index);
         let hk_x
         if (countArrows(ID) != 0) {
