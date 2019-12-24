@@ -9,7 +9,9 @@
         "main.ts",
         "README.md",
         "huskylens.ts",
+		"_locales/zh/Huskylens-strings.json",
         "enums.d.ts"
+		
     ],
     "preferredEditor": "tsprj",
     "testFiles": [
