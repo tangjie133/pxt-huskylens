@@ -1,10 +1,11 @@
 {
     "name": "Huskylens",
+    "version": "0.0.1",
+    "description": "",
     "dependencies": {
         "core": "*",
         "radio": "*"
     },
-    "description": "",
     "files": [
         "main.ts",
         "README.md",
@@ -13,9 +14,11 @@
         "_locales/zh-tw/Huskylens-strings.json",
         "enums.d.ts"
     ],
-    "preferredEditor": "tsprj",
     "testFiles": [
         "test.ts"
     ],
-    "version": "0.0.1"
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "tsprj"
 }

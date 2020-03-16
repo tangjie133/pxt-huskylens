@@ -33,6 +33,18 @@ enum Content2 {
     //% block="yTarget"
     yTarget = 4
 }
+enum Content3 {
+    //% block="ID"
+    ID = 5,
+    //% block="xCenter"
+    xCenter = 1,
+    //% block="yCenter"
+    yCenter = 2,
+    //% block="Length"
+    width = 3,
+    //% block="Width"
+    height = 4
+}
 //
 enum HUSKYLENSResultType_t {
     //%block="Block"
@@ -349,60 +361,55 @@ namespace huskylens {
                 return 0;
         }
     }
-    //%block="writeLearn|%ID "
+    // //%block="writeLearn|%ID "
+    // //% weight=60
+    // export function writeLearn1(ID: number) {
+    //     while (!writeLearn(ID)) {
+    //         // basic.showLeds(`
+    //         //         . . # . .
+    //         //         . . # . .
+    //         //         . . # . .
+    //         //         . . . . .
+    //         //         . . # . .
+    //         //         `, 10)
+    //         // basic.pause(500)
+    //         // basic.clearScreen()
+    //         // //serial.writeNumber(36)
+    //         // //serial.writeLine("")
+    //     }
+    //     // basic.showLeds(`
+    //     //             . . . . .
+    //     //             . # . # .
+    //     //             . . . . .
+    //     //             # . . . #
+    //     //             . # # # .
+    //     //             `, 10)
+    //     // basic.pause(500)
+    //     // basic.clearScreen()
+
+    // }
+  
+    //% block="HuskyLens get from result near the center box|%deta parameter "
     //% weight=60
-    export function writeLearn1(ID: number) {
-        while (!writeLearn(ID)) {
-            basic.showLeds(`
-                    . . # . .
-                    . . # . .
-                    . . # . .
-                    . . . . .
-                    . . # . .
-                    `, 10)
-            basic.pause(500)
-            basic.clearScreen()
-            //serial.writeNumber(36)
-            //serial.writeLine("")
-        }
-        basic.showLeds(`
-                    . . . . .
-                    . # . # .
-                    . . . . .
-                    # . . . #
-                    . # # # .
-                    `, 10)
-        basic.pause(500)
-        basic.clearScreen()
 
-    }
-    //%block="writeForget "
-    //% weight=55
-    export function writeForget1(): void {
-        while (!writeForget()) {
-            basic.showLeds(`
-                    . . # . .
-                    . . # . .
-                    . . # . .
-                    . . . . .
-                    . . # . .
-                    `, 10)
-            basic.pause(500)
-            basic.clearScreen()
-            //serial.writeNumber(36)
-            //serial.writeLine("")
+    export function readBlockParameterDirect(deta: Content3): number {
+        let hk_x
+        switch (deta) {
+            case 1:
+                hk_x = protocolPtr[0][1]; break;
+            case 2:
+                hk_x = protocolPtr[0][2]; break;
+            case 3:
+                hk_x = protocolPtr[0][3]; break;
+            case 4:
+                hk_x = protocolPtr[0][4]; break;
+            default:
+                hk_x = protocolPtr[0][0];
         }
-        basic.showLeds(`
-                    . . . . .
-                    . # . # .
-                    . . . . .
-                    # . . . #
-                    . # # # .
-                    `, 10)
-        basic.pause(500)
-        basic.clearScreen()
 
+        return hk_x;
     }
+
     //
     function validateCheckSum() {
 
@@ -678,7 +685,7 @@ namespace huskylens {
     //
     function readKnock() {
         for (let i = 0; i < 5; i++) {
-            protocolWriteCommand(protocolCommand.COMMAND_REQUEST_FORGET);//I2C
+            protocolWriteCommand(protocolCommand.COMMAND_REQUEST_KNOCK);//I2C
             if (wait(protocolCommand.COMMAND_RETURN_OK)) {
                 return true;
             }
@@ -688,7 +695,7 @@ namespace huskylens {
     }
     function writeForget() {
         for (let i = 0; i < 5; i++) {
-            protocolWriteCommand(protocolCommand.COMMAND_REQUEST_KNOCK);
+            protocolWriteCommand(protocolCommand.COMMAND_REQUEST_FORGET);
             if (wait(protocolCommand.COMMAND_RETURN_OK)) {
                 return true;
             }
