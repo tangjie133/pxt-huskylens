@@ -45,11 +45,23 @@ enum Content3 {
     //% block="Width"
     height = 4
 }
+enum Content4 {
+    //% block=" xOrigin"
+    xOrigin = 1,
+    //% block="yOrigin"
+    yOrigin = 2,
+    //% block="xTarget"
+    xTarget = 3,
+    //% block="yTarget"
+    yTarget = 4,
+    //% block="ID"
+    ID = 5
+}
 //
 enum HUSKYLENSResultType_t {
-    //%block="Block"
+    //%block="box"
     HUSKYLENSResultBlock = 1,
-    //%block="Arrow"
+    //%block="arrow"
     HUSKYLENSResultArrow = 2,
 }
 enum protocolCommand {
@@ -70,6 +82,8 @@ enum protocolCommand {
     COMMAND_RETURN_OK = 0x2E,
     COMMAND_REQUEST_LEARN = 0x2F,
     COMMAND_REQUEST_FORGET = 0x30,
+    COMMAND_REQUEST_SENSOR = 0x31,
+
 }
 
 enum protocolAlgorithm {
@@ -116,7 +130,7 @@ namespace huskylens {
 
     let command: number
     let content: number
-    //% block="request data once and store into the result"
+    //% block="HuskyLens request once enter the result"
     //% weight=80
     export function request(): void {
         protocolWriteCommand(protocolCommand.COMMAND_REQUEST)
@@ -125,7 +139,7 @@ namespace huskylens {
     /**
      * @param ID to ID ,eg: 1
      */
-    //% block="from result,whether ID|%ID is learned"
+    //% block="HuskyLens get from result ID|%ID have learned?"
     //% weight=75
     export function isLearned(ID: number): boolean {
         let hk_x = countLearnedIDs();
@@ -136,7 +150,7 @@ namespace huskylens {
     /**
      * @param ID to ID ,eg: 1
      */
-    //% block="from result, whether ID |%ID |%Ht is appear in the screen"
+    //% block="HuskyLens get from result ID |%ID |%Ht in picture?"
     //% weight=70
     export function isAppear(ID: number, Ht: HUSKYLENSResultType_t): boolean {
         switch (Ht) {
@@ -147,15 +161,14 @@ namespace huskylens {
             default:
                 return false;
         }
-        //return false;
     }
 
     /**
      * @param ID to ID ,eg: 1
      */
-    //%block="from result, get ID|%ID block parameter|%number1"
+    //%block="HuskyLens get from result ID|%ID box parameter|%number1"
     //% weight=65
-    export function readeBlock(ID: number, number1: Content1): number {
+    export function readeBox(ID: number, number1: Content1): number {
         let hk_y = cycle_block(ID, 1);
         let hk_x
         if (countBlocks(ID) != 0) {
@@ -181,10 +194,10 @@ namespace huskylens {
      * @param ID to ID ,eg: 1
      * @param index to index ,eg: 1
      */
-    //%block="from result, get ID|%ID block No.|%index parameter |%number1"
+    //%block="HuskyLens get from result ID|%ID|%index box parameter|%number1"
     //% weight=45
     //% advanced=true
-    export function readeBlock_index(ID: number, index: number, number1: Content1): number {
+    export function readeBox_index(ID: number, index: number, number1: Content1): number {
         let hk_y = cycle_block(ID, index);
         let hk_x
         if (countBlocks(ID) != 0) {
@@ -213,9 +226,9 @@ namespace huskylens {
      * @param ID to ID ,eg: 1
      */
 
-    //%block="from result, get ID |%ID arrow parameter |%number1"
+    //%block="HuskyLens get from result ID |%ID arrow parameter |%number1"
     //% weight=60
-    export function readeAppear(ID: number, number1: Content2): number {
+    export function readeArrow(ID: number, number1: Content2): number {
         let hk_y = cycle_arrow(ID, 1);
         let hk_x
         if (countArrows(ID) != 0) {
@@ -245,10 +258,10 @@ namespace huskylens {
         * @param index to index ,eg: 1
     */
 
-    //%block="from result, get ID|%ID arrow No.|%index parameter |%number1"
+    //%block="HuskyLens get from result ID|%ID|%index arrow parameter|%number1"
     //% weight=35
     //% advanced=true
-    export function readeAppear_index(index: number, ID: number, number1: Content2): number {
+    export function readeArrow_index(index: number, ID: number, number1: Content2): number {
         let hk_y = cycle_arrow(ID, index);
         let hk_x
         if (countArrows(ID) != 0) {
@@ -272,7 +285,7 @@ namespace huskylens {
         return hk_x;
     }
 
-    //%block="initialize via I2C until success"
+    //%block="HuskyLens initialize via I2C until success"
     //% weight=90
     export function initI2c(): void {
         while (!readKnock()) {
@@ -297,7 +310,7 @@ namespace huskylens {
         basic.clearScreen()
     }
 
-    //%block="switch to|%mode algorithm until success"
+    //%block="HuskyLens change|%mode algorithm until success"
     //% weight=85
     export function initMode(mode: protocolAlgorithm) {
         while (!writeAlgorithm(mode)) {
@@ -324,14 +337,14 @@ namespace huskylens {
     }
 
     //
-    //%block="from result, get total number of learned IDs"
+    //%block="HuskyLens get from result studyed ID"
     //% weight=55
     //% advanced=true
     export function getIds(): number {
         return Protocol_t[2];
     }
     //
-    //%block="from result, get total number of |%Ht"
+    //%block="HuskyLens get from result|%Httotal"
     //% weight=50
     //% advanced=true
     export function getBox(Ht: HUSKYLENSResultType_t): number {
@@ -348,7 +361,7 @@ namespace huskylens {
     /**
       * @param ID to ID ,eg: 1
    */
-    //%block="from result, get total number of ID|%ID|%Ht"
+    //%block="KuskyLens get from result ID|%ID|%Httotal"
     //% weight=45
     //% advanced=true
     export function getBox_S(ID: number, Ht: HUSKYLENSResultType_t): number {
@@ -388,25 +401,102 @@ namespace huskylens {
     //     // basic.clearScreen()
 
     // }
-  
+
+
     //% block="HuskyLens get from result near the center box|%deta parameter "
     //% weight=60
+    export function readBox_s(deta: Content3): number {
+        let hk_x 
+        let hk_y = readBlockCenterParameterDirect();
+        if(hk_y!=-1){
+             switch (deta) {
+            case 1:
+                hk_x = protocolPtr[hk_y][1]; break;
+            case 2:
+                hk_x = protocolPtr[hk_y][2]; break;
+            case 3:
+                hk_x = protocolPtr[hk_y][3]; break;
+            case 4:
+                hk_x = protocolPtr[hk_y][4]; break;
+            default:
+                hk_x = protocolPtr[hk_y][5];
+                }
+        }
+        else hk_x = -1
+       
+        return hk_x;
+    }
 
-    export function readBlockParameterDirect(deta: Content3): number {
+    //% block="HuskyLens get from result near the center arrow|%deta parameter "
+    //% weight=60
+    export function readArrow_s(deta:Content4):number{
         let hk_x
+        let hk_y = readArrowCenterParameterDirect()
         switch (deta) {
             case 1:
-                hk_x = protocolPtr[0][1]; break;
+                hk_x = protocolPtr[hk_y][1]; break;
             case 2:
-                hk_x = protocolPtr[0][2]; break;
+                hk_x = protocolPtr[hk_y][2]; break;
             case 3:
-                hk_x = protocolPtr[0][3]; break;
+                hk_x = protocolPtr[hk_y][3]; break;
             case 4:
-                hk_x = protocolPtr[0][4]; break;
+                hk_x = protocolPtr[hk_y][4]; break;
             default:
-                hk_x = protocolPtr[0][0];
+                hk_x = protocolPtr[hk_y][5];
         }
+        return hk_x;
+    }
 
+    //%block="HuskyLens get from result|%Htin picture?"
+    //% weight=60
+    export function isAppear_s(Ht:HUSKYLENSResultType_t):boolean{
+         switch (Ht) {
+            case 1:
+                if (countBlocks_s() != 0) return true;
+            case 2:
+                if (countArrows_s() != 0) return true;
+            default:
+                return false;
+        }
+    }
+
+
+    //% block="HuskyLens get from result |%index box parameter|%deta "
+    //% weight=60
+    export function readBox_ss(index:number, deta:Content3):number{
+            let hk_x
+        switch (deta) {
+            case 1:
+                hk_x = protocolPtr[index][1]; break;
+            case 2:
+                hk_x = protocolPtr[index][2]; break;
+            case 3:
+                hk_x = protocolPtr[index][3]; break;
+            case 4:
+                hk_x = protocolPtr[index][4]; break;
+            default:
+                hk_x = protocolPtr[index][5];
+        }
+        return hk_x;
+    }
+
+
+     //% block="HuskyLens get from result |%index arrow parameter|%deta "
+    //% weight=60
+    export function readArrow_ss(index:number, deta:Content4):number{
+            let hk_x
+        switch (deta) {
+            case 1:
+                hk_x = protocolPtr[index][1]; break;
+            case 2:
+                hk_x = protocolPtr[index][2]; break;
+            case 3:
+                hk_x = protocolPtr[index][3]; break;
+            case 4:
+                hk_x = protocolPtr[index][4]; break;
+            default:
+                hk_x = protocolPtr[index][5];
+        }
         return hk_x;
     }
 
@@ -765,6 +855,37 @@ namespace huskylens {
             }
         }
         return null;
+    }
+
+    function readBlockCenterParameterDirect():number{
+        let distanceMinIndex = -1;
+        let distanceMin = 65535;
+        for (let i = 0; i < Protocol_t[1]; i++) {
+            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_BLOCK){
+                let distance = Math.round(Math.sqrt(Math.abs(protocolPtr[i][1]-320/2))) + Math.round(Math.sqrt(Math.abs(protocolPtr[i][2]-240/2)));
+                if (distance <distanceMin){
+                    distanceMin = distance;
+                    distanceMinIndex = i;
+                    }
+            }
+        }
+        return distanceMinIndex
+    }
+
+    function readArrowCenterParameterDirect():number{
+        let distanceMinIndex = -1;
+        let distanceMin = 65535;
+        for (let i = 0; i < Protocol_t[1]; i++) {
+            if (protocolPtr[i][0] == protocolCommand.COMMAND_RETURN_ARROW){
+                let distance = Math.round(Math.sqrt(Math.abs(protocolPtr[i][1]-320/2))) + Math.round(Math.sqrt(Math.abs(protocolPtr[i][2]-240/2)));
+                if (distance <distanceMin){
+                    distanceMin = distance;
+                    distanceMinIndex = i;
+                    }
+            }
+        }
+
+        return distanceMinIndex
     }
 }
 
