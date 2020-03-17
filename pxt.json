@@ -7,7 +7,6 @@
         "radio": "*"
     },
     "files": [
-        "main.ts",
         "README.md",
         "huskylens.ts",
         "_locales/zh-cn/Huskylens-strings.json",
