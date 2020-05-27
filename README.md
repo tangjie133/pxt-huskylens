@@ -1,10 +1,10 @@
 # HuskyLens
 
-[HuskyLens is an easy-to-use ai vision sensor with six built-in functions: face recognition, object tracking, object recognition, line tracking, color recognition, and label (qr code) recognition.](https://www.dfrobot.com.cn/goods-2050.html)
+[HuskyLens is an easy-to-use AI vision sensor with six built-in functions: face recognition, object tracking, object recognition, line tracking, color recognition, and label (qr code) recognition.](https://www.dfrobot.com.cn/goods-2050.html)
 
 ## Basic usage
 
-* HuskyLens I2C initialization and pattern selection.（HuskyLens I2C初始化和模式选择。）
+* HuskyLens Init I2C and select pattern.
 
 ```blocks
 
@@ -13,7 +13,7 @@
 
 ```
 
-* HuskyLens requests the data and stores the requested data in the result for later use.（HuskyLens请求数据并将请求的数据存储在结果中以供以后使用。）
+* HuskyLens requests the data and stores the requested data in the result for later use.
 
 ```blocks
 
@@ -23,7 +23,7 @@
 
 ```
 
-* HuskyLens retrieves the desired result from the result（For example, get the X center of the ID1 box）（HuskyLens从结果中检索所需的结果）
+* HuskyLens retrieves the desired result from the result (For example, get the X center of the ID1 box).
 
 ```blocks
 
@@ -40,7 +40,7 @@
 
 ```
 
-* HuskyLens retrieves the parameters of the center box on the screen from the result（HuskyLens从结果中检索屏幕中央框的参数）
+* HuskyLens retrieves the parameters of the center box on the screen from the result.
 
 ```blocks
 
@@ -53,7 +53,7 @@
 
 ```
 
-* HuskyLens takes the parameters of the NTH box from the result（HuskyLens从结果中获取第n个框的参数）
+* HuskyLens gets the parameters of the Nth box from the result.
 
 ```blocks
     huskylens.initI2c()
@@ -73,4 +73,3 @@ Copyright (c) 2020, microbit/micropython Chinese community
 ## Supported targets
 
 * for PXT/microbit
-(The metadata above is needed for package search.)

@@ -2,8 +2,8 @@
  * @file pxt-DFRobot_HuskyLens/huskylens.ts
  * @brief DFRobot's huskylens makecode library.
  * @n [Get the module here](https://github.com/DFRobot/pxt-DFRobot_HaskyLens)
- * @n HuskyLens is an easy-to-use ai vision sensor with six built-in functions: face recognition, object tracking, object recognition, line tracking, color recognition, and label (qr code) recognition. 
- * Only one button is needed to complete the AI training, which can get rid of tedious training and complicated visual algorithm, and make you more focused on the conception and implementation of the project.
+ * @n HuskyLens is an easy-to-use AI vision sensor with six built-in functions: face recognition, object tracking, object recognition, line tracking, color recognition, and label (qr code) recognition. 
+ * Only one button is needed to complete the AI training, which can get rid of tedious training and complicated visual algorithm and help users stay focused on the conception and implementation of the project.
  * 
  * @copyright    [DFRobot](http://www.dfrobot.com), 2016
  * @copyright    MIT Lesser General Public License
@@ -135,8 +135,7 @@ namespace huskylens {
     let content: number
 
     /**
-     * HuskyLens requests the data and stores it in the result.
-     * HuskyLens请求数据并将其存储在结果中
+     * HuskyLens requests data and stores it in the result.
      */
 
     //% block="HuskyLens request once enter the result"
@@ -147,8 +146,7 @@ namespace huskylens {
     }
 
     /**
-     * HuskyLens get from result ID have learned?
-     * HuskyLens从结果中获得ID已学习?
+     * The ID Huskylens got from result has been learned before?
      * @param ID to ID ,eg: 1
      */
 
@@ -161,8 +159,7 @@ namespace huskylens {
     }
 
     /**
-     * HuskyLens get from result ID box or arrow in picture?
-     * HuskyLens从结果获取ID对应的方框或箭头是否出现在屏幕中
+     * The box or arrow corresponding to ID obtained by HuskyLens from result appears in screen？
      * @param ID to ID ,eg: 1
      */
 
@@ -180,8 +177,7 @@ namespace huskylens {
     }
 
     /**
-     * HuskyLens get from result ID box parameter.
-     * HuskyLens从结果中获取ID对应方框的参数。
+     * HuskyLens get the parameter of the box corresponding to ID from result.
      * @param ID to ID ,eg: 1
      */
 
@@ -211,8 +207,7 @@ namespace huskylens {
     //
 
     /**
-     * HuskyLens get from result ID box parameter.
-     * HuskyLens从结果中获取ID对应的第N个方框的参数
+     * HuskyLens get the parameter of the Nth box corresponding to ID from result.
      * @param ID to ID ,eg: 1
      * @param index to index ,eg: 1
      */
@@ -246,8 +241,7 @@ namespace huskylens {
     //
 
     /**
-     * HuskyLens get from result ID arrow parameter.
-     * HuskyLens从结果中回去ID对应箭头的参数
+     * HuskyLens get the parameter of the arrow corresponding to ID from result.
      * @param ID to ID ,eg: 1
      */
 
@@ -280,8 +274,7 @@ namespace huskylens {
     //
 
     /**
-     * HuskyLens get from result ID arrow parameter.
-     * HuskyLens从结果中回去ID对应的第N个箭头的参数
+     * HuskyLens get the parameter of the Nth arrow corresponding to ID from result.
      * @param ID to ID ,eg: 1
      * @param index to index ,eg: 1
      */
@@ -313,8 +306,7 @@ namespace huskylens {
         return hk_x;
     }
     /**
-     * HuskyLens initialize via I2C until success
-     * HuskyLens初始化I2C直到成功
+     * HuskyLens init I2C until success
      */
     //%block="HuskyLens initialize via I2C until success"
     //% weight=90
@@ -342,7 +334,6 @@ namespace huskylens {
     }
     /**
      * HuskyLens change mode algorithm until success.
-     * HuskyLens切换模式直到成功
      */
     //%block="HuskyLens change|%mode algorithm until success"
     //% weight=85
@@ -372,8 +363,7 @@ namespace huskylens {
 
     
     /**
-     * HuskyLens get from result studyed ID
-     * HuskyLens从结果中回去ID总数
+     * HuskyLens get the number of the learned ID from result.
      */
     //%block="HuskyLens get from result studyed ID"
     //% weight=79
@@ -382,7 +372,7 @@ namespace huskylens {
     }
     
     /**
-     * HuskyLens get from result box or arrow total.
+     * HuskyLens get the box or arrow total number from result.
      * 
      */
     //%block="HuskyLens get from result|%Httotal"
@@ -400,8 +390,7 @@ namespace huskylens {
     }
     
     /**
-     * HuskyLens get from result ID box or arrow total.
-     * HuskyLens从结果中获取方框或箭头的总数
+     * HuskyLens get the total number of box or arrow from result.
      * @param ID to ID ,eg: 1
      */
     //%block="HuskyLens get from result ID|%ID|%Httotal"
@@ -446,8 +435,7 @@ namespace huskylens {
     // }
 
     /**
-     * HuskyLens get from result near the center box  data parameter.、
-     * HuskyLens从结果中获取靠近中心方框的参数
+     * HuskyLens get the parameter of box near the screen center from result.
      */
     //% block="HuskyLens get from result near the center box|%data parameter "
     //% weight=77
@@ -472,8 +460,7 @@ namespace huskylens {
         return hk_x;
     }
     /**
-     * HuskyLens get from result near the center arrow data parameter.
-     * HuskyLens从结果中获取靠近中心箭头的参数
+     * HuskyLens get the parameter of arrow near the screen center from result.
      */
     //% block="HuskyLens get from result near the center arrow|%data parameter "
     //% weight=77
@@ -498,8 +485,7 @@ namespace huskylens {
         return hk_x;
     }
     /**
-     * HuskyLens get from result in picture box or arrow?
-     * HuskyLens从结果中获取方框或箭头是否在画面中?
+     * The box or arrow HuskyLens got from result appears in screen?
      */
     //%block="HuskyLens get from result|%Htin in picture?"
     //% weight=78
@@ -515,8 +501,7 @@ namespace huskylens {
     }
 
     /**
-     * HuskyLens get from result index box parameter data.
-     * HuskyLens从结果中获取第N个方框的参数
+     * HuskyLens get the parameter of Nth box from result.
      * @param index to index ,eg: 1
      */
     //% block="HuskyLens get from result |%index box parameter|%data "
@@ -543,8 +528,7 @@ namespace huskylens {
     }
 
     /**
-     * HuskyLens get from result index arrow parameter data.
-     * HuskyLens从结果中获取第N个箭头的参数
+     * HuskyLens get the parameter of the Nth arrow from result.
      * @param index to index ,eg: 1
     */
     //% block="HuskyLens get from result |%index arrow parameter|%data "
@@ -614,10 +598,8 @@ namespace huskylens {
     function processReturn() {
         if (!wait(protocolCommand.COMMAND_RETURN_INFO)) return false;
         protocolReadFiveInt16(protocolCommand.COMMAND_RETURN_INFO);
-        // protocolPtr = (Protocol_t *) realloc(protocolPtr, protocolInfo.protocolSize * sizeof(Protocol_t));
         for (let i = 0; i < Protocol_t[1]; i++) {
-            //serial.writeNumber(12)
-            //serial.writeLine("")
+           
             if (!wait()) return false;
             if (protocolReadFiveInt161(i, protocolCommand.COMMAND_RETURN_BLOCK)) continue;
             else if (protocolReadFiveInt161(i, protocolCommand.COMMAND_RETURN_ARROW)) continue;
@@ -918,4 +900,3 @@ namespace huskylens {
         return distanceMinIndex
     }
 }
-
