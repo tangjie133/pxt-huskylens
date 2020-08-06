@@ -498,7 +498,7 @@ namespace huskylens {
      * Huskylens automatic learning ID
      * @param id to id ,eg: 1
      */
-    //%block="Huskylens learn ID %id once automatically"
+    //%block="HuskyLens learn ID %id once automatically"
     //% weight=30
     //% advanced=true
     export function writeLearn1(id: number):void{
@@ -510,7 +510,7 @@ namespace huskylens {
     /**
      * Huskylens forget all learning data of the current algorithm
      */
-    //%block="Huskylens forget all learning data of the current algorithm"
+    //%block="HuskyLens forget all learning data of the current algorithm"
     //% weight=29
     //% advanced=true
     export function forgetLearn():void{
@@ -524,7 +524,7 @@ namespace huskylens {
      * @param id to id ,eg: 1
      * @param name to name ,eg: "DFRobot"
      */
-    //%block="Huskylens name the current algorithm of ID %id to %name"
+    //%block="HuskyLens name the current algorithm of ID %id to %name"
     //% weight=28
     //% advanced=true
     export function writeName(id:number,name:string):void{
@@ -554,7 +554,7 @@ namespace huskylens {
      * @param x to x ,eg: 150
      * @param y to y ,eg: 30
      */
-    //%block="Huskylens show characters %name x %x y %y super-imposed"
+    //%block="HuskyLens show characters %name x %x y %y super-imposed"
     //% weight=27
     //% advanced=true
     //% x.min=0 x.max=319
@@ -583,9 +583,9 @@ namespace huskylens {
         yes();
     }
     /**
-     * Huskylens clear characters in the screen
+     * HuskyLens clear characters in the screen
      */
-    //%block="Huskylens clear characters in the screen"
+    //%block="HuskyLens clear characters in the screen"
     //% weight=26
     //% advanced=true
     export function clearOSD():void{
@@ -597,7 +597,7 @@ namespace huskylens {
     /**
      * Photos and screenshots
      */
-    //%block="Huskylens trigger to take a %request and save it to a TF card"
+    //%block="HuskyLens trigger to take a %request and save it to a TF card"
     //% weight=25
     //% advanced=true
     export function takePhotoToSDCard(request:HUSKYLENSphoto):void{
@@ -619,13 +619,12 @@ namespace huskylens {
                 no();
             }
             yes();
-        }
-        
+        } 
     }
     /**
      * Save data model
      */
-    //%block="Huskylens %command current algorithm data as TF card No. %data model"
+    //%block="HuskyLens %command current algorithm data as TF card No. %data model"
     //% weight=24
     //% advanced=true
     //% data.min=0 data.max=5
