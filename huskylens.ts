@@ -537,7 +537,7 @@ namespace huskylens {
             send_index += 2;
             for(let i=0;i<newname.length;i++){
                 send_buffer[send_index] = newname.charCodeAt(i);
-                serial.writeNumber(newname.charCodeAt(i))
+                //serial.writeNumber(newname.charCodeAt(i))
                 send_index ++;
             }
             send_buffer[send_index]=0;
@@ -573,7 +573,7 @@ namespace huskylens {
             send_index += 4;
             for(let i=0;i<name.length;i++){
                 send_buffer[send_index] = name.charCodeAt(i);
-                serial.writeNumber(name.charCodeAt(i));
+                //serial.writeNumber(name.charCodeAt(i));
                 send_index ++;
             }
             let length = husky_lens_protocol_write_end();
