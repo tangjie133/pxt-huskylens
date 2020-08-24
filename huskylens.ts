@@ -199,7 +199,7 @@ namespace huskylens {
     /**
      * The box or arrow HuskyLens got from result appears in screen?
      */
-    //%block="HuskyLens check if %Htin is on screen from the result"
+    //%block="HuskyLens check if %Ht is on screen from the result"
     //% weight=78
     export function isAppear_s(Ht: HUSKYLENSResultType_t): boolean {
         switch (Ht) {
@@ -239,7 +239,7 @@ namespace huskylens {
     /**
      * HuskyLens get the parameter of arrow near the screen center from result.
      */
-    //% block="HuskyLens get %data of arrow closest to the center of screen from the result
+    //% block="HuskyLens get %data of arrow closest to the center of screen from the result"
     //% weight=77
     export function readArrow_s(data: Content4): number {
         let hk_x
@@ -292,9 +292,9 @@ namespace huskylens {
      * HuskyLens get the parameter of the box corresponding to ID from result.
      * @param id to id ,eg: 1
      */
-    //%block="HuskyLens get  %number1 of ID %id frame from the result"
+    //%block="HuskyLens get  $number1 of ID $id frame from the result"
     //% weight=65
-    export function readeBox(id: number, number1: Content1): number {
+    export function readeBox( id: number,number1: Content1): number {
         let hk_y = cycle_block(id, 1);
         let hk_x
         if (countBlocks(id) != 0) {
@@ -320,9 +320,9 @@ namespace huskylens {
      * @param id to id ,eg: 1
      */
 
-    //%block="HuskyLens get %number1 of ID %id arrow from the result"
+    //%block="HuskyLens get $number1 of ID $id arrow from the result"
     //% weight=60
-    export function readeArrow(id: number, number1: Content2): number {
+    export function readeArrow(number1: Content2,id: number): number {
         let hk_y = cycle_arrow(id, 1);
         let hk_x
         if (countArrows(id) != 0) {
@@ -367,7 +367,7 @@ namespace huskylens {
      * HuskyLens get the parameter of Nth box from result.
      * @param index to index ,eg: 1
      */
-    //% block="HuskyLens get %data of the No. %index frame from the result"
+    //% block="HuskyLens get $data of the No. $index frame from the result"
     //% weight=60
     //% advanced=true
     export function readBox_ss(index: number, data: Content3): number {
@@ -395,7 +395,7 @@ namespace huskylens {
      * HuskyLens get the parameter of the Nth arrow from result.
      * @param index to index ,eg: 1
     */
-    //% block="HuskyLens get %data of the No. %index arrow from the result"
+    //% block="HuskyLens get $data of the No. $index arrow from the result"
     //% weight=60
     //% advanced=true
     export function readArrow_ss(index: number, data: Content4): number {
@@ -440,7 +440,7 @@ namespace huskylens {
      * @param id to id ,eg: 1
      * @param index to index ,eg: 1
      */
-    //%block="HuskyLens get %number1 of the ID %id  No. %index frame from the result"
+    //%block="HuskyLens get $number1 of the ID $id  No. $index frame from the result"
     //% weight=45
     //% advanced=true
     export function readeBox_index(id: number, index: number, number1: Content1): number {
@@ -471,7 +471,7 @@ namespace huskylens {
      * @param id to id ,eg: 1
      * @param index to index ,eg: 1
      */
-    //%block="HuskyLens get %number1 of the ID %id No. %index arrow from the result"
+    //%block="HuskyLens get $number1 of the ID $id No. $index arrow from the result"
     //% weight=35
     //% advanced=true
     export function readeArrow_index(index: number, id: number, number1: Content2): number {
@@ -713,15 +713,11 @@ namespace huskylens {
 
     function wait(command = 0) {
         timerBegin();
-        //serial.writeValue("621:", 0)
         basic.pause(100)
         while (timerAvailable()) {
-            //serial.writeValue("621:", 1)
             if (protocolAvailable()) {
-                //serial.writeValue("621:", 2)
                 if (command) {
                     if (husky_lens_protocol_read_begin(command)) {
-                        //serial.writeValue("624:", 3)
                         return true;
                     }
                 }
@@ -734,8 +730,6 @@ namespace huskylens {
     }
     
     function husky_lens_protocol_read_begin(command = 0) {
-        //serial.writeValue("635:", command)
-        //serial.writeValue("6356", receive_buffer[COMMAND_INDEX])
         if (command == receive_buffer[COMMAND_INDEX]) {
             content_current = CONTENT_INDEX;
             content_read_end = false;
@@ -764,7 +758,6 @@ namespace huskylens {
             m_i = 0;
         }
         for (let i = m_i; i < 16; i++) {
-            //serial.writeValue("667:", buf[i])
             if (husky_lens_protocol_receive(buf[i])) {
                 m_i++;
                 return true;
@@ -811,9 +804,7 @@ namespace huskylens {
         let x: number = ((content.toString()).length)
         if (send_index + x >= FRAME_BUFFER_SIZE) { send_fail = true; return; }
         send_buffer[send_index] = content & 0xff;
-        //serial.writeValue("711:", send_buffer[send_index])
         send_buffer[send_index + 1] = (content >> 8) & 0xff;
-        //serial.writeValue("713:", send_buffer[send_index+1])
         send_index += 2;
     }
     
