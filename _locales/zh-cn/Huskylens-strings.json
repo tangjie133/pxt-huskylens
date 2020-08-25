@@ -6,7 +6,7 @@
     "huskylens.isAppear|block": "HuskyLens从结果中获取ID %ID %Ht是否在画面中?",
     "huskylens.readeBox|block": "HuskyLens从结果中获取ID %ID 方框的参数 %number1",
     "huskylens.readeArrow|block": "HuskyLens从结果中获取ID %ID 箭头的参数 %number1",
-    "huskylens.getIds|block": "HuskyLens从结果中获取 已学ID总数",
+    "huskylens.getIds|block": "HuskyLens从结果中获取已学ID总数",
     "huskylens.getBox|block": "HuskyLens从结果中获取 %Ht总数",
     "huskylens.getBox_S|block": "HuskyLens从结果中获取ID %ID %Ht 总数",
     "huskylens.readeBox_index|block": "HuskyLens从结果中获取ID %ID 第 %index 个方框的参数 %number1",

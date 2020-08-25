@@ -162,9 +162,8 @@ namespace huskylens {
     //%block="HuskyLens initialize I2C until success"
     //% weight=90
     export function initI2c(): void {
-        while (!readKnock()) {
-            no();
-        }
+        while(!readKnock());
+
         yes();
     }
     /**
@@ -173,9 +172,7 @@ namespace huskylens {
     //%block="HuskyLens switch algorithm to %mode"
     //% weight=85
     export function initMode(mode: protocolAlgorithm) {
-        while (!writeAlgorithm(mode, protocolCommand.COMMAND_REQUEST_ALGORITHM)) {
-           no();
-        }
+        while (!writeAlgorithm(mode, protocolCommand.COMMAND_REQUEST_ALGORITHM));
         yes();
     }
     /**
@@ -387,7 +384,6 @@ namespace huskylens {
                     hk_x = protocolPtr[hk_i][5];
             }
         } else hk_x = -1;
-        protocolPtr[hk_i][0] = 0;
         return hk_x;
         
     }
@@ -415,7 +411,7 @@ namespace huskylens {
                     hk_x = protocolPtr[hk_i][5];
             }
         } else hk_x = -1;
-        protocolPtr[hk_i][0] = 0;
+        //protocolPtr[hk_i][0] = 0;
         return hk_x;
     }
     /**
@@ -505,10 +501,7 @@ namespace huskylens {
     //% weight=30
     //% advanced=true
     export function writeLearn1(id: number):void{
-        while(!writeAlgorithm(id, 0X36)){
-            no();
-        }
-        //yes();
+        while(!writeAlgorithm(id, 0X36));
     }
     /**
      * Huskylens forget all learning data of the current algorithm
@@ -517,10 +510,7 @@ namespace huskylens {
     //% weight=29
     //% advanced=true
     export function forgetLearn():void{
-        while(!writeAlgorithm(0x47, 0X37)){
-            no();
-        }
-        //yes();
+        while(!writeAlgorithm(0x47, 0X37));
     }
     /**
      * Set ID name
@@ -549,7 +539,6 @@ namespace huskylens {
             let Buffer = pins.createBufferFromArray(buffer);
             protocolWrite(Buffer);
         }while(!wait(protocolCommand.COMMAND_RETURN_OK));
-        //yes();
     }
     /**
      * Display characters on the screen
@@ -585,7 +574,6 @@ namespace huskylens {
             let Buffer = pins.createBufferFromArray(buffer);
             protocolWrite(Buffer);
         }while(!wait(protocolCommand.COMMAND_RETURN_OK));
-        //yes();
     }
     /**
      * HuskyLens clear characters in the screen
@@ -594,10 +582,7 @@ namespace huskylens {
     //% weight=26
     //% advanced=true
     export function clearOSD():void{
-        while(!writeAlgorithm(0x45, 0X35)){
-            no();
-        }
-        //yes();
+        while(!writeAlgorithm(0x45, 0X35));
     }
     /**
      * Photos and screenshots
@@ -608,22 +593,13 @@ namespace huskylens {
     export function takePhotoToSDCard(request:HUSKYLENSphoto):void{
         switch(request){
         case HUSKYLENSphoto.PHOTO:
-            while(!writeAlgorithm(0x40, 0X30)){
-                no();
-            }
-            //yes();
+            while(!writeAlgorithm(0x40, 0X30));
             break;
         case HUSKYLENSphoto.SCREENSHOT:
-            while(!writeAlgorithm(0x49, 0X39)){
-                no();
-            }
-            //yes();
+            while(!writeAlgorithm(0x49, 0X39));
             break;
         default:
-            while(!writeAlgorithm(0x40, 0X30)){
-                no();
-            }
-            //yes();
+            while(!writeAlgorithm(0x40, 0X30));
         } 
     }
     /**
@@ -636,22 +612,13 @@ namespace huskylens {
     export function saveModelToTFCard(command:HUSKYLENSMode,data:number):void{
        switch(command){
        case HUSKYLENSMode.SAVE:
-            while(!writeAlgorithm(data,0x32)){
-                no();
-            }
-            //yes();
+            while(!writeAlgorithm(data,0x32));
             break;
         case HUSKYLENSMode.LOAD:
-            while(!writeAlgorithm(data,0x33)){
-                no();
-            }
-           //yes();
+            while(!writeAlgorithm(data,0x33));
             break;
         default:
-            while(!writeAlgorithm(data,0x32)){
-                no();
-            }
-            //yes();
+            while(!writeAlgorithm(data,0x32));
        }
     }
 
@@ -713,8 +680,7 @@ namespace huskylens {
 
     function wait(command = 0) {
         timerBegin();
-        basic.pause(100)
-        while (timerAvailable()) {
+        while(!timerAvailable()) {
             if (protocolAvailable()) {
                 if (command) {
                     if (husky_lens_protocol_read_begin(command)) {
@@ -724,6 +690,8 @@ namespace huskylens {
                 else {
                     return true;
                 }
+            }else{
+                return false;
             }
         }
         return false;
@@ -742,12 +710,11 @@ namespace huskylens {
     let timeOutDuration = 100;
     let timeOutTimer: number
     function timerBegin() {
-        timeOutTimer = input.runningTimeMicros();
-
+        timeOutTimer = input.runningTime();
     }
     
     function timerAvailable() {
-        return (input.runningTimeMicros() - timeOutTimer > timeOutDuration);
+        return (input.runningTime() - timeOutTimer > timeOutDuration);
     }
     
     let m_i = 16
@@ -898,7 +865,6 @@ namespace huskylens {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -1005,16 +971,16 @@ namespace huskylens {
 
     function no():void
     {
-        basic.showIcon(IconNames.No)
-        basic.pause(200)
-        basic.clearScreen()
-         basic.pause(200)
+        basic.showIcon(IconNames.No);
+        basic.pause(100);
+        basic.clearScreen();
+        basic.pause(100);
     }
     function yes():void
     {
-        basic.showIcon(IconNames.Yes)
-        basic.pause(200)
-        basic.clearScreen()
+        basic.showIcon(IconNames.Yes);
+        basic.pause(100);
+        basic.clearScreen();
     }
     
     
